@@ -1,0 +1,16 @@
+/* In resources/css/app.css */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+
+.arabic-font {
+    font-family: 'Tajawal', sans-serif;
+}
+
+.english-font {
+    font-family: 'Cairo', sans-serif;
+}
+
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
