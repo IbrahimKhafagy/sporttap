@@ -8,10 +8,10 @@
 @endsection
 @section('content')
 
-<div class="row">
+<div class="row" >
     <div class="col">
         <div class="h-100">
-            <div class="row mb-3 pb-1">
+            <div class="row mb-3 pb-1" dir="{{(App::isLocale('ar') ? 'rtl' : 'ltr')}}">
                 <div class="col-12">
                     <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                         <div class="flex-grow-1">

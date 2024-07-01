@@ -2,8 +2,8 @@
 
 return [
     'login' => 'Login',
-    'welcome_back' => 'Welcome Back!',
-    'sign_in_to_continue' => 'Sign in to continue to Velzon.',
+    'welcome_back' => 'Welcome Back !',
+    'sign_in_to_continue' => 'Sign in to continue to Sport Tap',
     'email' => 'Email',
     'password' => 'Password',
     'forgot_password' => 'Forgot password?',

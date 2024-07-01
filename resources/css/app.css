@@ -1,4 +1,3 @@
-/* In resources/css/app.css */
 @import url('https://fonts.googleapis.com/css2?family=Tajawal&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
 
@@ -14,3 +13,10 @@
     direction: rtl;
     text-align: right;
 }
+
+/* Additional RTL specific styles */
+.rtl .form-control {
+    text-align: right;
+}
+
+/* Add any other RTL styles you need */

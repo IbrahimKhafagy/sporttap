@@ -55,6 +55,13 @@ return [
     'playgrounds'=>'playgrounds',
     'edit'=>'edit',
     'delete'=>'delete',
+    'project'=> 'Sport Tap',
+    'forget'=> 'Forget Password ?',
+    'reset'=> 'Reset password with sporttap',
+    'enter'=> 'Enter your email and instructions will be sent to you!',
+    'send'=>'Send now',
+    'Wait'=>' Wait, I remember my password...  ',
+    'click'=>'click Here',
 
 
 

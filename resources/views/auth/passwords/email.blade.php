@@ -2,7 +2,7 @@
 @extends('layouts.master-without-nav')
 
 @section('title')
-    @lang('translation.password-reset')
+    @lang('messages.project')
 @endsection
 
 @section('content')
@@ -30,7 +30,6 @@
                                     <img src="{{ URL::asset('build/images/logo-light.png') }}" alt="" height="20">
                                 </a>
                             </div>
-                            <p class="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p>
                         </div>
                     </div>
                 </div>
@@ -42,8 +41,8 @@
 
                             <div class="card-body p-4">
                                 <div class="text-center mt-2">
-                                    <h5 class="text-primary">Forgot Password?</h5>
-                                    <p class="text-muted">Reset password with velzon</p>
+                                    <h5 class="text-primary">@lang('messages.forget')</h5>
+                                    <p class="text-muted">@lang('messages.reset')</p>
 
                                     <lord-icon src="https://cdn.lordicon.com/rhvddzym.json" trigger="loop"
                                         colors="primary:#0ab39c" class="avatar-xl">
@@ -58,14 +57,14 @@
                                 @endif
 
                                 <div class="alert alert-borderless alert-warning text-center mb-2 mx-2" role="alert">
-                                    Enter your email and instructions will be sent to you!
+                                    @lang('messages.enter')
                                 </div>
                                 <div class="p-2">
                                     <form method="POST" action="{{ route('admin.password.email') }}">
                                         @csrf
 
                                         <div class="mb-4">
-                                            <label for="email" class="form-label">Email</label>
+                                            <label for="email" class="form-label">@lang('auth.email')</label>
                                             <input type="email" id="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                                             @error('email')
                                                 <span class="invalid-feedback" role="alert">
@@ -75,7 +74,7 @@
                                         </div>
 
                                         <div class="text-center mt-4">
-                                            <button class="btn btn-success w-100" type="submit">Send Reset Link</button>
+                                            <button class="btn btn-success w-100" type="submit">@lang('messages.send')</button>
                                         </div>
                                     </form><!-- end form -->
                                 </div>
@@ -85,8 +84,8 @@
                         <!-- end card -->
 
                         <div class="mt-4 text-center">
-                            <p class="mb-0">Wait, I remember my password... <a href="{{ route('admin.login') }}"
-                                    class="fw-semibold text-primary text-decoration-underline"> Click here </a> </p>
+                            <p class="mb-0">@lang('messages.wait')<a href="{{ route('admin.login') }}"
+                                    class="fw-semibold text-primary text-decoration-underline">@lang('messages.click')</a> </p>
                         </div>
 
                     </div>

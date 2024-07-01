@@ -11,10 +11,10 @@ class ForgotPasswordController extends Controller
 {
     use SendsPasswordResetEmails;
 
-    // public function __construct()
-    // {
-    //     $this->middleware('guest:admin');
-    // }
+    public function __construct()
+    {
+        $this->middleware('guest:admin');
+    }
 
     public function broker()
     {
