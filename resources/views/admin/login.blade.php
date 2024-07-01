@@ -1,7 +1,7 @@
 @extends('layouts.master-without-nav')
 
 @section('title')
-    @lang('messages.project')
+    @lang('messages.projectt')
 @endsection
 
 @section('content')
