@@ -52,6 +52,7 @@ return [
     'add_playground'=>'Add playground',
     'name_en'=>'Name',
     'Places'=>'Places',
+    'places'=>'Places',
     'playgrounds'=>'playgrounds',
     'edit'=>'edit',
     'delete'=>'delete',

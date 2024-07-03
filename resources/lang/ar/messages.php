@@ -52,6 +52,7 @@ return [
     'name_ar'=>'الاسم',
     'Places'=>'الاماكن',
     'playgrounds'=>'الملاعب',
+    'places'=>'الملاعب',
     'edit'=>'تعديل',
     'delete'=>'حذف',
     'project'=>'سبورت تاب',

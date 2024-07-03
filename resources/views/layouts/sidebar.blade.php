@@ -28,52 +28,52 @@
     <div id="scrollbar">
         <div class="container-fluid">
 
-            <div id="two-column-menu">
-            </div>
+            <div id="two-column-menu"></div>
             <ul class="navbar-nav text-center" id="navbar-nav">
-                <li class="menu-title"><span>@lang('messages.menu')
-                    </span></li>
+                <li class="menu-title">
+                    <span>@lang('messages.menu')</span>
+                </li>
+
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="home"  role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="bx bx-home"></i> <span>@lang('messages.dashboards')
-                        </span>
+                    <a class="nav-link menu-link" href="home" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                        <i class="bx bx-home"></i> <span>@lang('messages.dashboards')</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
+
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApp">
-                        <i class="bx bx-user-pin"></i> <span>@lang('messages.Clients')
-                        </span>
+                    <a class="nav-link menu-link" href="#sidebarClients" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarClients">
+                        <i class="bx bx-user-pin"></i> <span>@lang('messages.Clients')</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarApps">
+                    <div class="collapse menu-dropdown" id="sidebarClients">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="Clients" class="nav-link">@lang('messages.Client_menu')
-                                </a>
+                                <a href="Clients" class="nav-link">@lang('messages.Client_menu')</a>
                             </li>
                         </ul>
                     </div>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="bx bxs-edit-location"></i> <span>@lang('messages.Places')
-                        </span>
+                    <a class="nav-link menu-link" href="#sidebarPlaces" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPlaces">
+                        <i class="bx bxs-edit-location"></i> <span>@lang('messages.Places')</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarApps">
+                    <div class="collapse menu-dropdown" id="sidebarPlaces">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a href="playgrounds" class="nav-link">
-                                    <i class="bx bx-football"></i> <span>@lang('messages.playgrounds') </span>
+                                    <i class="bx bx-football"></i> <span>@lang('messages.playgrounds')</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="places" class="nav-link">
-                                    <i class="bx bx-football"></i> <span>@lang('messages.places') </span>
+                                    <i class="bx bx-football"></i> <span>@lang('messages.places')</span>
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </li>
             </ul>
+
         </div>
         <!-- Sidebar -->
     </div>

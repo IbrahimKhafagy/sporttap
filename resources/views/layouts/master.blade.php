@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
     {{-- <link rel="stylesheet" href="{{ mix('css/app.css') }}"> --}}
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('build/css/app.css') }}" rel="stylesheet">
 
     <meta charset="utf-8" />
     <title>@yield('title')</title>
@@ -43,7 +43,6 @@
     </div>
     <!-- END layout-wrapper -->
 
-    @include('layouts.customizer')
 
     <!-- JAVASCRIPT -->
     @include('layouts.vendor-scripts')

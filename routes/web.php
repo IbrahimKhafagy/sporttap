@@ -46,7 +46,7 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
 
         Route::middleware('auth:admin')->group(function () {
 
-            Route::post('logout', [LoginController::class, 'logout']);
+            Route::post('logout', [LoginController::class, 'logout'])->name('logout');
             Route::get('/home', [HomeController::class, 'index'])->name('home');
             Route::get('/Clients', [HomeController::class, 'view']);
 
