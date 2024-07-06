@@ -60,7 +60,7 @@
                                     @lang('messages.enter')
                                 </div>
                                 <div class="p-2">
-                                    <form method="POST" action="{{ route('admin.password.email') }}">
+                                    <form method="POST" action="{{ route('password.email') }}">
                                         @csrf
 
                                         <div class="mb-4">
@@ -76,7 +76,9 @@
                                         <div class="text-center mt-4">
                                             <button class="btn btn-success w-100" type="submit">@lang('messages.send')</button>
                                         </div>
-                                    </form><!-- end form -->
+                                    </form>
+
+
                                 </div>
                             </div>
                             <!-- end card body -->
@@ -104,7 +106,7 @@
                         <div class="text-center">
                             <script>
                                 document.write(new Date().getFullYear())
-                            </script> Velzon. Crafted with <i
+                            </script> sporttap. Crafted with <i
                                     class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
                         </div>
                     </div>
