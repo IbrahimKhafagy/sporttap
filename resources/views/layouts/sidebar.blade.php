@@ -38,19 +38,14 @@
                     <a class="nav-link menu-link" href="home" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class="bx bx-home"></i> <span>@lang('messages.dashboards')</span>
                     </a>
-                </li> <!-- end Dashboard Menu -->
+                </li>
+                 <!-- end Dashboard Menu -->
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarClients" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarClients">
-                        <i class="bx bx-user-pin"></i> <span>@lang('messages.Clients')</span>
+                    <a href="Clients" class="nav-link">
+                    <i class="bx bx-user-pin"></i> <span>@lang('messages.Clients')</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarClients">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="Clients" class="nav-link">@lang('messages.Client_menu')</a>
-                            </li>
-                        </ul>
-                    </div>
+
                 </li>
 
                 <li class="nav-item">

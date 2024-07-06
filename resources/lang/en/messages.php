@@ -63,8 +63,8 @@ return [
     'send'=>'Send now',
     'Wait'=>' Wait, I remember my password...  ',
     'click'=>'click Here',
-
-
+    'update'=>'update',
+    'edit_client'=>'edit client',
 
 
 ];
