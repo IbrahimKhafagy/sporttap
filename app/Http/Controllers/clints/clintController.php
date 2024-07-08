@@ -5,6 +5,7 @@ namespace App\Http\Controllers\clints;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Console\View\Components\Alert;
 
 class clintController extends Controller
 {
@@ -16,8 +17,11 @@ class clintController extends Controller
         return view('clients', compact('clients'));
     }
 
+
     public function store(Request $request)
     {
+
+
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -25,22 +29,26 @@ class clintController extends Controller
             'sport_type' => 'required|string|max:50',
             'gender' => 'required|string|max:10',
             'level' => 'required|string|max:50',
-            'check' => 'required|boolean',
+            'check' => 'nullable|boolean',
             'age' => 'required|integer',
-            'is_active' => 'required|boolean',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        $user = User::create($validatedData);
+        // dd($validatedData);
+        User::create($validatedData);
 
-        return response()->json($user, 201);
+        return redirect()->route('clients.index')->with('success', 'تمت إضافة العميل بنجاح!');
     }
+
+
 
 
     public function edit($id)
-    {
-        $client = User::findOrFail($id);
-        return view('clients', compact('client'));
-    }
+{
+    $client = User::findOrFail($id);
+    return view('clients.edit', compact('client'));
+}
+
 
     public function update(Request $request, $id)
     {
