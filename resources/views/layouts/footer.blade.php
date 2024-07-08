@@ -1,10 +1,14 @@
 <footer class="footer">
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
-            <div class="col-sm-6">
-               <span style="text-align: center"> <script>document.write(new Date().getFullYear())</script> © sport tap  Design & Develop by Themesbrand. </span>
+            <div class="col-lg-12">
+                <div class="text-center">
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> sporttap. Crafted with <i
+                            class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                </div>
             </div>
         </div>
     </div>
 </footer>
-

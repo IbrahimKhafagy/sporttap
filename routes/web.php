@@ -61,7 +61,7 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
             Route::get('/places', [PlaceController::class, 'index'])->name('places.index');
             Route::get('/places/{id}', [PlaceController::class, 'show'])->name('places.show');
 
-            
+
         });
 
 

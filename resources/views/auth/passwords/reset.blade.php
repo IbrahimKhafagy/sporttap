@@ -40,8 +40,8 @@
 
                             <div class="card-body p-4">
                                 <div class="text-center mt-2">
-                                    <h5 class="text-primary">@lang('messages.reset')</h5>
-                                    <p class="text-muted">@lang('messages.password')</p>
+                                    <h5 class="text-primary">@lang('messages.forget')</h5>
+                                    <p class="text-muted">@lang('messages.reset')</p>
 
                                     <lord-icon src="https://cdn.lordicon.com/rhvddzym.json" trigger="loop"
                                         colors="primary:#0ab39c" class="avatar-xl">
@@ -56,9 +56,9 @@
                                 @endif
 
                                 <div class="alert alert-borderless alert-warning text-center mb-2 mx-2" role="alert">
-                                    @lang('messages.enter_password')
+                                    @lang('messages.enter')
                                 </div>
-                                <div class="p-2">
+                                <div class="p-2" dir="{{(App::isLocale('ar') ? 'rtl' : 'ltr')}}">
                                     <form method="POST" action="{{ route('password.update') }}">
                                         @csrf
 
@@ -115,20 +115,7 @@
         <!-- end auth page content -->
 
         <!-- footer -->
-        <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="text-center">
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script> sporttap. Crafted with <i
-                                    class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        @include('layouts.footer')
         <!-- end Footer -->
     </div>
     <!-- end auth-page-wrapper -->

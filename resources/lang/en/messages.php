@@ -84,9 +84,11 @@ return [
     'project'=> 'Sport Tap',
     'forget'=> 'Forget Password ?',
     'reset'=> 'Reset password with sporttap',
+    'reset'=> 'Reset password with sporttap',
     'enter'=> 'Enter your email and instructions will be sent to you!',
+    'reset_password'=>'Reset',
     'send'=>'Send now',
-    'Wait'=>' Wait, I remember my password...  ',
+    'wait'=>' Wait, I remember my password...  ',
     'click'=>'click Here',
 
 

@@ -1,13 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Tajawal&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
 
-.arabic-font {
-    font-family: 'Tajawal', sans-serif;
+body {
+    font-family: "Tajawal", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* .arabic-font {
+    font-family: "Tajawal", sans-serif;
+    font-weight: 200;
+    font-style: normal;
 }
 
 .english-font {
     font-family: 'Cairo', sans-serif;
-}
+} */
 
 .rtl {
     direction: rtl;
@@ -18,5 +25,3 @@
 .rtl .form-control {
     text-align: right;
 }
-
-/* Add any other RTL styles you need */

@@ -59,7 +59,7 @@
                                 <div class="alert alert-borderless alert-warning text-center mb-2 mx-2" role="alert">
                                     @lang('messages.enter')
                                 </div>
-                                <div class="p-2">
+                                <div class="p-2" dir="{{(App::isLocale('ar') ? 'rtl' : 'ltr')}}">
                                     <form method="POST" action="{{ route('password.email') }}">
                                         @csrf
 
@@ -99,20 +99,7 @@
         <!-- end auth page content -->
 
         <!-- footer -->
-        <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="text-center">
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script> sporttap. Crafted with <i
-                                    class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+       @include('layouts.footer')
         <!-- end Footer -->
     </div>
     <!-- end auth-page-wrapper -->
