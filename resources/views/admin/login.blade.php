@@ -71,7 +71,7 @@
 
                                         <div class="form-check">
                                             <div class="float-end">
-                                                <a href="{{ route('admin.password.request') }}" class="text-muted" >@lang('auth.forgot_password')</a>
+                                                <a href="{{ route('password.request') }}" class="text-muted" >@lang('auth.forgot_password')</a>
                                             </div>
                                         </div>
 

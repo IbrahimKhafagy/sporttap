@@ -264,7 +264,7 @@
                                     <p class="text-muted">Sign in to continue to Velzon.</p>
                                 </div>
                                 <div class="p-2 mt-4">
-                                    <form method="POST" action="{{ route('admin.check') }}">
+                                    <form method="POST" action="{{ route('login') }}">
                                         @csrf
 
                                         <div class="row mb-3">
