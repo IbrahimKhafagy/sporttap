@@ -6,6 +6,6 @@
 <body>
     <h1>Reset Password</h1>
     <p>You requested a password reset for your account. Click the link below to reset your password:</p>
-    <a href="{{ route('password/reset', $token).'?email='.urlencode($email) }}">Reset Password</a>
+    <a href="{{ $resetUrl }}">Reset Password</a>
 </body>
 </html>

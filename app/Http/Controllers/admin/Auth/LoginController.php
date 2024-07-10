@@ -64,13 +64,11 @@ class LoginController extends Controller
 
         $locale = $request->session()->get('locale', config('app.locale'));
 
-        Auth::guard('admin')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
 
         $request->session()->put('locale', $locale);
+        Auth::guard('admin')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect('/');
     }

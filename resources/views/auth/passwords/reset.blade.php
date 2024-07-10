@@ -103,7 +103,7 @@
 
                         <div class="mt-4 text-center">
                             <p class="mb-0">@lang('messages.wait')<a href="{{ route('admin.login') }}"
-                                    class="fw-semibold text-primary text-decoration-underline">@lang('messages.click')</a> </p>
+                                    class="fw-semibold text-primary text-decoration-underline" style="color:#001221 !important;">@lang('messages.click')</a> </p>
                         </div>
 
                     </div>

@@ -38,8 +38,8 @@ class ForgotPasswordController extends Controller
         );
 
         if ($response == Password::RESET_LINK_SENT) {
-            $token = app('auth.password.broker')->createToken(app('auth.password.broker')->getUser($request->only('email')));
-            // $token = Password::createToken(app('auth.password.broker')->getUser($request->only('email')));
+            $user = $this->broker()->getUser($request->only('email'));
+            $token = $this->broker()->createToken($user);
 
             Mail::to($request->email)->send(new ResetPasswordMail($token, $request->email));
             return back()->with('status', trans($response));

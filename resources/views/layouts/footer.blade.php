@@ -5,8 +5,8 @@
                 <div class="text-center">
                     <script>
                         document.write(new Date().getFullYear())
-                    </script> sporttap. Crafted with <i
-                            class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                    </script> SporTap. Crafted with <i
+                            class="mdi mdi-heart text-danger"></i> by Magic Solutions</p>
                 </div>
             </div>
         </div>

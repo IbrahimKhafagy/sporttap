@@ -26,8 +26,8 @@
                         <div class="text-center mt-sm-5 mb-4 text-white-50">
                             <div>
                                 <a href="index" class="d-inline-block auth-logo">
-                                    <img src="{{ URL::asset('build/images/logo-light.png') }}" alt=""
-                                        height="20">
+                                    <img src="{{ URL::asset('build/images/logo_sport.png') }}" alt=""
+                                        height="50">
                                 </a>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                                         <div class="form-check">
                                             <div class="float-end">
                                                 <a href="{{ route('password.request') }}"
-                                                    class="text-muted">@lang('auth.forgot_password')</a>
+                                                    class="text-muted1">@lang('auth.forgot_password')</a>
                                             </div>
                                         </div>
 
