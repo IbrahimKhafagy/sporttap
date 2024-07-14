@@ -18,6 +18,7 @@
             </div>
         </div>
 
+
         <!-- auth page content -->
         <div class="auth-page-content">
             <div class="container">
