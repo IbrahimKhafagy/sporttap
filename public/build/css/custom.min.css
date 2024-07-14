@@ -49,6 +49,46 @@
     --vz-btn-disabled-border-color: #0FAF95 !important;
 }
 .auth-one-bg .bg-overlay {
-    background: linear-gradient(to right, #0FAF95,#51C075,#90D156, #90D156) !important;
+    background: linear-gradient(to right, #0FAF95,#0FAF95,#51C075, #51C075) !important;
     opacity: .9;
+}
+.navbar-menu .navbar-nav .nav-link:hover {
+    color: var(--vz-vertical-menu-item-hover-color);
+    font-family: "Tajawal", sans-serif !important;
+
+}
+.navbar-menu .navbar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    padding: .625rem 1.5rem;
+    color: var(--vz-vertical-menu-item-color);
+    font-size: .925rem;
+    font-family: "Tajawal", sans-serif !important;
+}
+.menu-title {
+    letter-spacing: .05em;
+    cursor: default;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--vz-vertical-menu-title-color);
+    font-weight: 600;
+    font-family: "Tajawal", sans-serif !important;
+    text-align: start !important;
+
+}
+.menu-title span {
+    padding: 12px 20px;
+    display: inline-block;
+}
+.thead, tbody, tfoot, tr, td, th {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+    font-family: "Tajawal", sans-serif !important;
+
+}
+
+.mb-2 {
+    margin-bottom: .5rem !important;
+    font-family: "Tajawal", sans-serif !important;
 }
