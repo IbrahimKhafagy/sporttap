@@ -6,6 +6,7 @@ return [
     'sign_in_to_continue' => 'قم بتسجيل الدخول للمتابعة إلى سبورت تاب',
     'email' => 'البريد الإلكتروني',
     'password' => 'كلمة المرور',
+    'confirm_password' => 'اعادة كلمة المرور',
     'forgot_password' => 'هل نسيت كلمة المرور؟',
     'remember_me' => 'تذكرني',
     'log_in' => 'تسجيل الدخول',

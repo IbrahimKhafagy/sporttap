@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
+.arabic-font {
+    font-family: "Tajawal", sans-serif!important;
+    font-weight: 200;
+    font-style: normal;
+}
+:is(.h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6) {
+    font-family: "Tajawal", sans-serif !important;
+}
+.text-muted{
+    font-family: "Tajawal", sans-serif !important;
+
+}
+.text-muted1{
+    font-family: "Tajawal", sans-serif !important;
+    color: #000 !important;
+    font-weight: 400;
+}
+.form-label {
+    font-family: "Tajawal", sans-serif !important;
+}
+
+
+.btn-success {
+    font-family: "Tajawal", sans-serif !important;
+
+}
+.mb-0 {
+    font-family: "Tajawal", sans-serif !important;
+}
+.text-primary {
+    --vz-text-opacity: 1;
+    color: #001221, var(--vz-text-opacity)) !important;
+}
+.btn-primary {
+    --vz-btn-color: #fff;
+    --vz-btn-bg: #0FAF95 !important;
+    --vz-btn-border-color: #0FAF95 !important;
+    --vz-btn-hover-color: #fff;
+    --vz-btn-hover-bg: #403098;
+    --vz-btn-hover-border-color: #3c2d8f;
+    --vz-btn-focus-shadow-rgb: 102, 86, 190;
+    --vz-btn-active-color: #fff;
+    --vz-btn-active-bg: #3c2d8f;
+    --vz-btn-active-border-color: #382a86;
+    --vz-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    --vz-btn-disabled-color: #fff;
+    --vz-btn-disabled-bg: #0FAF95 !important;
+    --vz-btn-disabled-border-color: #0FAF95 !important;
+}
+.auth-one-bg .bg-overlay {
+    background: linear-gradient(to right, #0FAF95,#51C075,#90D156, #90D156) !important;
+    opacity: .9;
+}

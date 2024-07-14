@@ -26,7 +26,8 @@
                         <div class="text-center mt-sm-5 mb-4 text-white-50">
                             <div>
                                 <a href="index" class="d-inline-block auth-logo">
-                                    <img src="{{ URL::asset('build/images/logo-light.png') }}" alt="" height="20">
+                                    <img src="{{ URL::asset('build/images/logo_sport.png') }}" alt=""
+                                        height="50">
                                 </a>
                             </div>
                         </div>
@@ -53,25 +54,29 @@
                                     </div>
                                 @endif
 
-                                <div class="p-2 mt-4" dir="{{(App::isLocale('ar') ? 'rtl' : 'ltr')}}">
+                                <div class="p-2 mt-4" dir="{{ App::isLocale('ar') ? 'rtl' : 'ltr' }}">
                                     {{-- <body > --}}
-                                    <form method="POST" action="{{ route('admin.login')}}" class="{{ app()->getLocale() === 'ar' ?  'rtl arabic-font' : 'ltr english-font' }}">
+                                    <form method="POST" action="{{ route('admin.login') }}"
+                                        class="{{ app()->getLocale() === 'ar' ? 'rtl arabic-font' : 'ltr english-font' }}">
                                         @csrf
 
                                         <div class="mb-3">
                                             <label for="email" class="form-label">@lang('auth.email')</label>
-                                            <input type="email" class="form-control" id="email" name="email"  placeholder="@lang('auth.email')" required>
+                                            <input type="email" class="form-control" id="email" name="email"
+                                                placeholder="@lang('auth.email')" required>
                                         </div>
 
                                         <div class="mb-3">
 
                                             <label for="password" class="form-label">@lang('auth.password')</label>
-                                            <input type="password" class="form-control" id="password" name="password"  placeholder="@lang('auth.password')" required>
+                                            <input type="password" class="form-control" id="password" name="password"
+                                                placeholder="@lang('auth.password')" required>
                                         </div>
 
                                         <div class="form-check">
                                             <div class="float-end">
-                                                <a href="{{ route('admin.password.request') }}" class="text-muted" >@lang('auth.forgot_password')</a>
+                                                <a href="{{ route('password.request') }}"
+                                                    class="text-muted1">@lang('auth.forgot_password')</a>
                                             </div>
                                         </div>
 
@@ -91,7 +96,5 @@
             <!-- end container -->
         </div>
         @include('layouts.footer')
-        <!-- end auth page content -->
-
         <!-- footer -->
-@endsection
+    @endsection

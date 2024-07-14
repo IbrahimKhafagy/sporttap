@@ -46,7 +46,7 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
 
         Route::middleware('auth:admin')->group(function () {
 
-            Route::post('logout', [LoginController::class, 'logout']);
+            Route::post('logout', [LoginController::class, 'logout'])->name('logout');
             Route::get('/home', [HomeController::class, 'index'])->name('home');
             Route::get('/Clients', [HomeController::class, 'view']);
 
@@ -61,14 +61,22 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
             Route::get('/places', [PlaceController::class, 'index'])->name('places.index');
             Route::get('/places/{id}', [PlaceController::class, 'show'])->name('places.show');
 
-            // Other admin routes
+
         });
 
+
+    });
+
+
+
+Route::prefix('admin')->group(function () {
         Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
         Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
         Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
         Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
     });
+
 
 
 

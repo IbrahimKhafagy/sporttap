@@ -59,8 +59,8 @@
                                 <div class="alert alert-borderless alert-warning text-center mb-2 mx-2" role="alert">
                                     @lang('messages.enter')
                                 </div>
-                                <div class="p-2">
-                                    <form method="POST" action="{{ route('admin.password.email') }}">
+                                <div class="p-2" dir="{{(App::isLocale('ar') ? 'rtl' : 'ltr')}}">
+                                    <form method="POST" action="{{ route('password.email') }}">
                                         @csrf
 
                                         <div class="mb-4">
@@ -76,7 +76,9 @@
                                         <div class="text-center mt-4">
                                             <button class="btn btn-success w-100" type="submit">@lang('messages.send')</button>
                                         </div>
-                                    </form><!-- end form -->
+                                    </form>
+
+
                                 </div>
                             </div>
                             <!-- end card body -->
@@ -85,7 +87,7 @@
 
                         <div class="mt-4 text-center">
                             <p class="mb-0">@lang('messages.wait')<a href="{{ route('admin.login') }}"
-                                    class="fw-semibold text-primary text-decoration-underline">@lang('messages.click')</a> </p>
+                                    class="fw-semibold text-primary text-decoration-underline" style="color:#001221 !important;">@lang('messages.click')</a> </p>
                         </div>
 
                     </div>
@@ -97,20 +99,7 @@
         <!-- end auth page content -->
 
         <!-- footer -->
-        <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="text-center">
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script> Velzon. Crafted with <i
-                                    class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+       @include('layouts.footer')
         <!-- end Footer -->
     </div>
     <!-- end auth-page-wrapper -->

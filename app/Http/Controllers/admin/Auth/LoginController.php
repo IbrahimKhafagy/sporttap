@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
@@ -9,21 +8,15 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Validation\ValidationException;
 
-
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
     protected $redirectTo = '/admin/home';
 
-    // public function __construct()
-    // {
-    //     $this->middleware('guest:admin')->except('logout');
-    // }
-
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('admin.login');
     }
 
     public function login(Request $request)
@@ -37,15 +30,13 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
-
     protected function validateLogin(Request $request)
     {
         $request->validate([
-            'email'=>'required|email|exists:admins,email',
-            'password'=>'required|min:5|max:30'
+            'email' => 'required|email|exists:admins,email',
+            'password' => 'required|min:5|max:30'
         ]);
     }
-
 
     protected function credentials(Request $request)
     {
@@ -59,7 +50,6 @@ class LoginController extends Controller
         ]);
     }
 
-
     protected function redirectPath()
     {
         if (method_exists($this, 'redirectTo')) {
@@ -69,14 +59,15 @@ class LoginController extends Controller
         return property_exists($this, 'redirectTo') ? $this->redirectTo : '/admin/home';
     }
 
-
     public function logout(Request $request)
     {
 
+        $locale = $request->session()->get('locale', config('app.locale'));
+
+
+        $request->session()->put('locale', $locale);
         Auth::guard('admin')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');
