@@ -1,4 +1,5 @@
-// Fonts
+// Fonts from Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
 @import url('https://fonts.bunny.net/css?family=Nunito');
 
 // Variables
@@ -6,3 +7,38 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+// Custom Font Face for local font files
+@font-face {
+    font-family: 'Tajawal';
+    src: url('/fonts/tajawal/Tajawal-Regular.woff2') format('woff2'),
+         url('/fonts/tajawal/Tajawal-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Tajawal', sans-serif;
+}
+
+.arabic-font {
+    font-family: 'Tajawal', sans-serif;
+}
+
+.english-font {
+    font-family: 'Nunito', sans-serif;
+}
+
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Additional RTL specific styles */
+.rtl .form-control {
+    text-align: right;
+}
+
+/* Add any other RTL styles you need */
+
+

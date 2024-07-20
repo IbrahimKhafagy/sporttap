@@ -18,6 +18,7 @@
             </div>
         </div>
 
+
         <!-- auth page content -->
         <div class="auth-page-content">
             <div class="container">
@@ -26,7 +27,7 @@
                         <div class="text-center mt-sm-5 mb-4 text-white-50">
                             <div>
                                 <a href="index" class="d-inline-block auth-logo">
-                                    <img src="{{ URL::asset('build/images/logo-light.png') }}" alt="" height="20">
+                                    <img src="{{ URL::asset('build/images/logo_sport.png') }}" alt="" height="40">
                                 </a>
                             </div>
                         </div>
@@ -40,8 +41,8 @@
 
                             <div class="card-body p-4">
                                 <div class="text-center mt-2">
-                                    <h5 class="text-primary">@lang('messages.reset')</h5>
-                                    <p class="text-muted">@lang('messages.password')</p>
+                                    <h5 class="text-primary">@lang('messages.forget')</h5>
+                                    <p class="text-muted">@lang('messages.reset')</p>
 
                                     <lord-icon src="https://cdn.lordicon.com/rhvddzym.json" trigger="loop"
                                         colors="primary:#0ab39c" class="avatar-xl">
@@ -56,9 +57,9 @@
                                 @endif
 
                                 <div class="alert alert-borderless alert-warning text-center mb-2 mx-2" role="alert">
-                                    @lang('messages.enter_password')
+                                    @lang('messages.enter')
                                 </div>
-                                <div class="p-2">
+                                <div class="p-2" dir="{{(App::isLocale('ar') ? 'rtl' : 'ltr')}}">
                                     <form method="POST" action="{{ route('password.update') }}">
                                         @csrf
 
@@ -103,7 +104,7 @@
 
                         <div class="mt-4 text-center">
                             <p class="mb-0">@lang('messages.wait')<a href="{{ route('admin.login') }}"
-                                    class="fw-semibold text-primary text-decoration-underline">@lang('messages.click')</a> </p>
+                                    class="fw-semibold text-primary text-decoration-underline" style="color:#001221 !important;">@lang('messages.click')</a> </p>
                         </div>
 
                     </div>
@@ -115,20 +116,7 @@
         <!-- end auth page content -->
 
         <!-- footer -->
-        <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="text-center">
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script> sporttap. Crafted with <i
-                                    class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        @include('layouts.footer')
         <!-- end Footer -->
     </div>
     <!-- end auth-page-wrapper -->

@@ -6,6 +6,7 @@ return [
     'sign_in_to_continue' => 'Sign in to continue to Sport Tap',
     'email' => 'Email',
     'password' => 'Password',
+    'confirm_password' => 'Confirm Password',
     'forgot_password' => 'Forgot password?',
     'remember_me' => 'Remember me',
     'log_in' => 'Log In',

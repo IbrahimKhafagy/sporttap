@@ -30,11 +30,12 @@ class ResetPasswordMail extends Mailable
      */
     public function build()
     {
+
+        $resetUrl = route('password.reset', ['token' => $this->token, 'email' => urlencode($this->email)]);
+
         return $this->view('emails.reset_password')
-                    ->subject('Reset Password Notification')
-                    ->with([
-                        'token' => $this->token,
-                        'email' => $this->email,
-                    ]);
+            ->with([
+                'resetUrl' => $resetUrl,
+            ]);
     }
 }

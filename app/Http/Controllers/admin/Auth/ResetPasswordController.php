@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ResetPasswordController extends Controller
 {
+    // Show the reset password form
     public function showResetForm(Request $request, $token)
     {
         return view('auth.passwords.reset')->with(
@@ -17,14 +18,17 @@ class ResetPasswordController extends Controller
         );
     }
 
+    // Handle the password reset
     public function reset(Request $request)
     {
+        // Validate the request
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|confirmed|min:8',
         ]);
 
+        // Attempt to reset the password
         $response = $this->broker()->reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
@@ -37,6 +41,7 @@ class ResetPasswordController extends Controller
             }
         );
 
+        // Handle the response
         if ($response == Password::PASSWORD_RESET) {
             return redirect()->route('admin.home')->with('status', __($response));
         } else {
@@ -44,6 +49,7 @@ class ResetPasswordController extends Controller
         }
     }
 
+    // Get the broker for admins
     protected function broker()
     {
         return Password::broker('admins');

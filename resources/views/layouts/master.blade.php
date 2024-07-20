@@ -4,10 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
     {{-- <link rel="stylesheet" href="{{ mix('css/app.css') }}"> --}}
-    <link href="{{ asset('build/css/app.css') }}" rel="stylesheet">
+
 
     <meta charset="utf-8" />
     <title>@yield('title')</title>
@@ -17,6 +15,7 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ URL::asset('build/images/favicon.ico')}}">
     @include('layouts.head-css')
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
 @section('body')
