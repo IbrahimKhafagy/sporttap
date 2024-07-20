@@ -59,14 +59,10 @@
                                     <i class="bx bx-football"></i> <span>@lang('messages.playgrounds')</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="places" class="nav-link">
-                                    <i class="bx bx-football"></i> <span>@lang('messages.places')</span>
-                                </a>
-                            </li>
                         </ul>
                     </div>
                 </li>
+
             </ul>
 
         </div>

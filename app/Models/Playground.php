@@ -64,7 +64,7 @@ class Playground extends Model
 
         return $distance;
     }
-    
+
     public function reservations()
     {
         return $this->hasMany(Reservation::class);

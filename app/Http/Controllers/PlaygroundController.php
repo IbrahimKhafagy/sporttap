@@ -1,69 +1,102 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Playground;
 use Illuminate\Http\Request;
+use App\Models\Playground;
+use App\Models\Classification;
+use App\Models\Place;
+use App\Models\Player;
+use App\Models\Image;
 
 class PlaygroundController extends Controller
 {
     public function index()
     {
-        $playgrounds = Playground::get();
-        return view('playgrounds', compact('playgrounds'));
-        }
-
-        public function create()
-        {
-            $playgrounds = Playground::get();
-            return view('playgrounds', compact('playgrounds'));
-
+        $playgrounds = Playground::all();
+        $places = Place::all();
+        return view('playgrounds.playgrounds', compact('playgrounds','places'));
     }
+
+
+
+    public function create()
+    {
+        $playgrounds = Playground::all();
+        $places = Place::all();
+        return view('playgrounds.playgrounds', compact('playgrounds','places'));
+    }
+
 
     public function store(Request $request)
     {
-
-        $request->validate([
-            'place_id' => 'required|exists:places,id',
+        // Validate the playground data
+        $validatedData = $request->validate([
+            'place_id' => 'nullable|integer|exists:places,id',
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'classification' => 'nullable|exists:place_settings,id',
-            'player' => 'nullable|exists:place_settings,id',
-            'images' => 'nullable|json',
-            'is_active' => 'boolean',
+            'classification' => 'nullable|integer',
+            'player' => 'nullable|string|max:255',
+            'images' => 'nullable|string|max:255',
             'price_per_60' => 'nullable|numeric',
             'price_per_90' => 'nullable|numeric',
             'price_per_120' => 'nullable|numeric',
             'price_per_180' => 'nullable|numeric',
-            'sale_price' => 'nullable|numeric',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        Playground::create($request->all());
+        $validatedData['is_active'] = $request->has('is_active');
 
-        return redirect()->route('playgrounds.index')->with('success', 'Playground created successfully.');
+        try {
+            Playground::create($validatedData);
+            session()->flash('Add', 'تم اضافة المنتج بنجاح');
+            return redirect()->route('admin.playgrounds.index')->with('success', 'Playground added successfully.');
+        } catch (\Exception $e) {
+            // Catch any exceptions and flash an error message
+            session()->flash('error', 'فشل في إضافة المنتج: ' . $e->getMessage());
+            return redirect()->back()->withInput();
+        }
     }
+
+
+
+
 
     public function show(Playground $playground)
     {
-        return view('playgrounds', compact('playground'));
+//        $playgrounds = Playground::all();
+//        $places = Place::all();
+//        return view('playgrounds.playgrounds', compact('playgrounds','places'));
     }
 
+
+    // Example controller method
     public function edit($id)
     {
-        dd($id);
-        // $playground = Playground::findOrFail($id);
-        // return view('playgrounds.edit', compact('playground'));
+        $playground = Playground::findOrFail($id);
+        $places = Place::all();
+        $name_ar_options = Playground::distinct()->pluck('name_ar'); // Example fetching of name_ar options
+        $name_en_options = Playground::distinct()->pluck('name_en'); // Example fetching of name_en options
+        $classifications = Classification::all();
+        $players = Player::all();
+        $images = Image::all(); // Assuming you have an Image model
+        $price_per_60_options = [100, 200, 300]; // Example data
+        $price_per_90_options = [150, 250, 350]; // Example data
+        $price_per_120_options = [200, 300, 400]; // Example data
+        $price_per_180_options = [250, 350, 450]; // Example data
+
+        return view('playgrounds.edit_playgrounds', compact('playground', 'places', 'name_ar_options', 'name_en_options', 'classifications', 'players', 'images', 'price_per_60_options', 'price_per_90_options', 'price_per_120_options', 'price_per_180_options'));
     }
 
-    public function update(Request $request, Playground $playground)
+    public function update(Request $request,$id)
     {
-        $request->validate([
+        $places = Place::all();
+        $validatedData = $request->validate([
             'place_id' => 'required|exists:places,id',
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'classification' => 'nullable|exists:place_settings,id',
             'player' => 'nullable|exists:place_settings,id',
-            'images' => 'nullable|json',
+            'images' => 'nullable|string ',
             'is_active' => 'boolean',
             'price_per_60' => 'nullable|numeric',
             'price_per_90' => 'nullable|numeric',
@@ -72,23 +105,29 @@ class PlaygroundController extends Controller
             'sale_price' => 'nullable|numeric',
         ]);
 
-        $playground->update($request->all());
+        // تحديث الحديقة باستخدام البيانات المدخلة
+        $validatedData['is_active'] = $request->has('is_active') ? true : false;
 
-        return redirect()->route('playgrounds.index')->with('success', 'Playground updated successfully.');
+        // Create the playground
+        $playground = Playground::findOrFail($id);
+        $playground->update($validatedData);
+
+        // العودة إلى الصفحة السابقة
+        return redirect()->route('admin.playgrounds.index')->with(compact('places'));
     }
 
-    public function destroy($id)
+
+
+    public function destroy(Playground $playground)
     {
-        $playground = Playground::findOrFail($id);
         $playground->delete();
 
-        return redirect()->with('success', 'Playground deleted successfully.');
+        return redirect()->route('admin.playgrounds.index')->with('success', 'Playground deleted successfully.');
     }
 
     public function reservations(Playground $playground)
-{
-    $reservations = $playground->reservations; // Assuming a relationship is defined
-    return view('reservations', compact('playground', 'reservations'));
+    {
+        $reservations = $playground->reservations; // Assuming a relationship is defined
+        return view('admin.reservations.index', compact('playground', 'reservations'));
+    }
 }
-}
-

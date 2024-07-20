@@ -76,6 +76,10 @@
     text-align: start !important;
 
 }
+.nav-item .nav-link {
+    font-family: "Tajawal", sans-serif !important;
+    text-align: start !important;
+}
 .menu-title span {
     padding: 12px 20px;
     display: inline-block;

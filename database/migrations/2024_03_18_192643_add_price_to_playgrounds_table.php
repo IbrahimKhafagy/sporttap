@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('playgrounds', function (Blueprint $table) {
-            $table->double('price')->nullable();
-        });
+        // Schema::table('playgrounds', function (Blueprint $table) {
+        //     $table->double('price')->nullable();
+        // });
     }
 
     /**

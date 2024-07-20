@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\HomeController;
@@ -53,10 +52,10 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
             Route::get('/playgrounds', [PlaygroundController::class, 'index'])->name('playgrounds.index');
             Route::get('/playgrounds/create', [PlaygroundController::class, 'create'])->name('playgrounds.create');
             Route::post('/playgrounds', [PlaygroundController::class, 'store'])->name('playgrounds.store');
-            Route::get('/playgrounds/{id}/edit', [PlaygroundController::class, 'edit']);
-            Route::put('/playgrounds/{id}', [PlaygroundController::class, 'update'])->name('playgrounds.update');
+            Route::get('/playgrounds/{playground}/edit', [PlaygroundController::class, 'edit'])->name('playgrounds.edit');
+            Route::put('/playgrounds/{playground}', [PlaygroundController::class, 'update'])->name('playgrounds.update');
             Route::delete('/playgrounds/{id}', [PlaygroundController::class, 'destroy']);
-            Route::get('playgrounds/{playground}/reservations', [PlaygroundController::class, 'reservations']);
+            Route::get('playgrounds/{playground}/reservations', [PlaygroundController::class, 'reservations'])->name('playgrounds.reservations');
 
             Route::get('/places', [PlaceController::class, 'index'])->name('places.index');
             Route::get('/places/{id}', [PlaceController::class, 'show'])->name('places.show');
