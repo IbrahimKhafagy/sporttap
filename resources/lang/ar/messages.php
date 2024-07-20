@@ -72,7 +72,7 @@ return [
     'Playground_menu'=>'قائمة الملاعب',
     'add_playground'=>'اضافة ملعب',
     'name_ar'=>'الاسم',
-    'Places'=>'الاماكن',
+    'Places'=>'مزودي الخدمات',
     'playgrounds'=>'الملاعب',
     'edit'=>'تعديل',
     'reservations'=>'الحجوزات',

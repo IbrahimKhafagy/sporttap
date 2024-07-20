@@ -50,12 +50,12 @@
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarPlaces" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPlaces">
-                        <i class="bx bxs-edit-location"></i> <span>@lang('messages.Places')</span>
+                        <i class="mdi mdi-account-box-multiple-outline"></i> <span>@lang('messages.Places')</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarPlaces">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="playgrounds" class="nav-link">
+                                <a href="{{route('admin.playgrounds.index')}}" class="nav-link">
                                     <i class="bx bx-football"></i> <span>@lang('messages.playgrounds')</span>
                                 </a>
                             </li>

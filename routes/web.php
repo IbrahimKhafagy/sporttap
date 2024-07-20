@@ -39,7 +39,7 @@ Route::get('lang/{locale}', function ($locale) {
 Route::get('/', [HomeController::class, 'root'])->name('root');
 
 
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('')->name('admin.')->group(function () {
         Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [LoginController::class, 'login']);
 
@@ -51,7 +51,6 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
 
             Route::get('/playgrounds', [PlaygroundController::class, 'index'])->name('playgrounds.index');
             Route::get('/playgrounds/create', [PlaygroundController::class, 'create'])->name('playgrounds.create');
-            Route::post('/playgrounds', [PlaygroundController::class, 'store'])->name('playgrounds.store');
             Route::get('/playgrounds/{playground}/edit', [PlaygroundController::class, 'edit'])->name('playgrounds.edit');
             Route::put('/playgrounds/{playground}', [PlaygroundController::class, 'update'])->name('playgrounds.update');
             Route::delete('/playgrounds/{id}', [PlaygroundController::class, 'destroy']);

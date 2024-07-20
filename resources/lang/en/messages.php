@@ -74,7 +74,7 @@ return [
     'add_playground'=>'Add playground',
     'name_en'=>'Name',
     'name_ar'=>'الاسم',
-    'Places'=>'Places',
+    'Places'=>'Service Providers',
     'playgrounds'=>'playgrounds',
     'edit'=>'edit',
     'delete'=>'delete',
