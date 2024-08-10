@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\clints\clintController;
+use App\Http\Controllers\general\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\HomeController;
@@ -39,7 +41,7 @@ Route::get('lang/{locale}', function ($locale) {
 Route::get('/', [HomeController::class, 'root'])->name('root');
 
 
-    Route::prefix('')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [LoginController::class, 'login']);
 
@@ -49,10 +51,15 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
             Route::get('/home', [HomeController::class, 'index'])->name('home');
             Route::get('/Clients', [HomeController::class, 'view']);
 
+            Route::get('/clients', [clintController::class, 'index'])->name('clients.index');
+
+
+            Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+
+
             Route::get('/playgrounds', [PlaygroundController::class, 'index'])->name('playgrounds.index');
             Route::get('/playgrounds/create', [PlaygroundController::class, 'create'])->name('playgrounds.create');
-            Route::get('/playgrounds/{playground}/edit', [PlaygroundController::class, 'edit'])->name('playgrounds.edit');
-            Route::put('/playgrounds/{playground}', [PlaygroundController::class, 'update'])->name('playgrounds.update');
+            Route::get('/playgrounds/{playground}/edit', [PlaygroundController::class, 'show'])->name('playgrounds.edit');
             Route::delete('/playgrounds/{id}', [PlaygroundController::class, 'destroy']);
             Route::get('playgrounds/{playground}/reservations', [PlaygroundController::class, 'reservations'])->name('playgrounds.reservations');
 

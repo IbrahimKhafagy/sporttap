@@ -1,48 +1,37 @@
 @extends('layouts.master')
 @section('title')
-    @lang('messages.create_playground')
+    @lang('messages.edit_playground')
 @endsection
 @section('css')
     <link href="{{ URL::asset('build/libs/dropzone/dropzone.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet "type="text/css" />
-
+    <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
 
-    <form id="create-playground-form" autocomplete="off" class="needs-validation" >
+    <form action="" id="edit-playground-form" autocomplete="off" class="needs-validation">
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-3">
-                            <div class="mb-3">
-                                <label class="form-label" for="product-title-input">
-                                    @lang('messages.field_label_ar')
-                                </label>
-                                <input type="hidden" class="form-control" id="formAction" name="formAction">
-                                <input type="text" class="form-control d-none" id="product-id-input">
-                                <input type="text" class="form-control" id="product-title-input" placeholder="@lang('messages.enter_field_name')" required>
-                                <div class="invalid-feedback">@lang('messages.enter_field_name_ar')</div>
-
-                            </div>
+                            <label class="form-label" for="product-title-input">
+                                @lang('messages.field_label_ar')
+                            </label>
+                            <input type="hidden" class="form-control" id="formAction" name="formAction">
+                            <input type="hidden" class="form-control" id="product-id-input" value="{{ $playground->id }}">
+                            <input type="text" class="form-control" value="{{ $playground->name_ar }}" id="product-title-input" placeholder="@lang('messages.enter_field_name')" required>
+                            <div class="invalid-feedback" >@lang('messages.enter_field_name_ar')</div>
                         </div>
 
                         <div class="mb-3">
-                            <div class="mb-3">
-                                <label class="form-label" for="product-title-input-en">
-                                    @lang('messages.field_label_en')
-                                </label>
-                                <input type="hidden" class="form-control" id="formAction" name="formAction" value="add">
-                                <input type="text" class="form-control d-none" id="product-id-input">
-                                <input type="text" class="form-control" id="product-title-input-en" placeholder="@lang('messages.enter_field_name')" required>
-                                <div class="invalid-feedback">@lang('messages.enter_field_name_en')</div>
-
-                            </div>
+                            <label class="form-label" for="product-title-input-en">
+                                @lang('messages.field_label_en')
+                            </label>
+                            <input type="text" class="form-control" id="product-title-input-en" value="{{ $playground->name_en }}" placeholder="@lang('messages.enter_field_name')" required>
+                            <div class="invalid-feedback">@lang('messages.enter_field_name_en')</div>
                         </div>
-
+                    </div>
                 </div>
-                </div>
-                <!-- end card -->
 
                 <div class="card">
                     <div class="card-header">
@@ -51,7 +40,7 @@
                     <div class="card-body">
                         <div class="mb-4">
                             <h5 class="fs-14 mb-1">@lang('messages.event_image')</h5>
-                            <p class="text-muted">@lang('messages.edit_or_add_image')</p>
+                            <p class="text-muted">@lang('messages.edit_add_image')</p>
                             <div class="text-center">
                                 <div class="position-relative d-inline-block">
                                     <div class="position-absolute top-100 start-100 translate-middle">
@@ -65,21 +54,23 @@
                                         <input class="form-control d-none" id="product-image-input" type="file" accept="image/png, image/gif, image/jpeg" multiple>
                                     </div>
                                 </div>
-                                <div id="image-preview-container" class="d-flex flex-wrap mt-3"></div>
+                                <div id="image-preview-container" class="d-flex flex-wrap mt-3">
+                                    @if (isset( $playground->images) && count( $playground->images) > 0)
+                                        @foreach ( $playground->images as $imageUrl)
+                                            <img src="{{ $imageUrl }}" class="img-thumbnail" style="max-width: 100px; margin: 5px;">
+                                        @endforeach
+                                    @endif
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- end card -->
 
-                <!-- end card -->
                 <div class="text-end mb-3">
-                    <button type="submit" class="btn btn-success w-sm">
-                        @lang('messages.save')
-                    </button>
+                    <button type="submit" class="btn btn-success w-sm">@lang('messages.save')</button>
                 </div>
             </div>
-            <!-- end col -->
 
             <div class="col-lg-4">
                 <div class="card">
@@ -90,80 +81,53 @@
                         <div class="row">
                             <div class="col-lg-6 col-sm-6">
                                 <div class="mb-3">
-                                    <label class="form-label" for="product-price-input">
-                                        @lang('messages.price_per_60_minutes')
-                                    </label>
+                                    <label class="form-label" for="product-price60-input">@lang('messages.price_per_60_minutes')</label>
                                     <div class="input-group has-validation mb-3">
-                                        <span class="input-group-text" id="product-price-addon">
-                                            @lang('messages.currency')
-                                        </span>
-                                        <input type="text" class="form-control" id="product-price60-input" placeholder="@lang('messages.enter_price')" aria-label="Price" aria-describedby="product-price-addon" required>
+                                        <span class="input-group-text">@lang('messages.currency')</span>
+                                        <input type="text" class="form-control" id="product-price60-input" value="{{ $playground->price_per_60 }}" placeholder="@lang('messages.enter_price')" required>
                                         <div class="invalid-feedback">@lang('messages.please_enter_price')</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-6">
                                 <div class="mb-3">
-                                        <label class="form-label" for="product-price90-input">
-                                            @lang('messages.price_per_90_minutes')
-                                        </label>
-                                        <div class="input-group has-validation mb-3">
-                                            <span class="input-group-text" id="product-price90-addon">
-                                                 @lang('messages.currency')
-                                             </span>
-                                            <input type="text" class="form-control" id="product-price90-input" placeholder="@lang('messages.enter_price')" aria-label="Price" aria-describedby="product-price90-addon" required>
-                                            <div class="invalid-feedback">@lang('messages.please_enter_price')</div>
-                                        </div>
+                                    <label class="form-label" for="product-price90-input">@lang('messages.price_per_90_minutes')</label>
+                                    <div class="input-group has-validation mb-3">
+                                        <span class="input-group-text">@lang('messages.currency')</span>
+                                        <input type="text" class="form-control" id="product-price90-input" value="{{ $playground->price_per_90 }}" placeholder="@lang('messages.enter_price')" required>
+                                        <div class="invalid-feedback">@lang('messages.please_enter_price')</div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- end col -->
                         </div>
 
                         <div class="row">
                             <div class="col-lg-6 col-sm-6">
                                 <div class="mb-3">
-                                    <label class="form-label" for="product-price120-input">
-                                        @lang('messages.price_per_120_minutes')
-                                    </label>
+                                    <label class="form-label" for="product-price120-input">@lang('messages.price_per_120_minutes')</label>
                                     <div class="input-group has-validation mb-3">
-                                        <span class="input-group-text" id="product-price-addon">
-                                          @lang('messages.currency')
-                                        </span>
-                                        <input type="text" class="form-control" id="product-price120-input" placeholder="@lang('messages.enter_price')" aria-label="Price" aria-describedby="product-price-addon" required>
+                                        <span class="input-group-text">@lang('messages.currency')</span>
+                                        <input type="text" class="form-control" id="product-price120-input" value="{{ $playground->price_per_120 }}" placeholder="@lang('messages.enter_price')" required>
                                         <div class="invalid-feedback">@lang('messages.please_enter_price')</div>
                                     </div>
-
-
                                 </div>
                             </div>
-
                             <div class="col-lg-6 col-sm-6">
                                 <div class="mb-3">
-                                    <label class="form-label" for="product-price180-input">
-                                        @lang('messages.price_per_180_minutes')
-                                    </label>
+                                    <label class="form-label" for="product-price180-input">@lang('messages.price_per_180_minutes')</label>
                                     <div class="input-group has-validation mb-3">
-                                        <span class="input-group-text" id="product-price-addon">
-                                            @lang('messages.currency')
-                                        </span>
-                                        <input type="text" class="form-control" id="product-price180-input" placeholder="@lang('messages.enter_price')" aria-label="Price" aria-describedby="product-price-addon" required>
+                                        <span class="input-group-text">@lang('messages.currency')</span>
+                                        <input type="text" class="form-control" id="product-price180-input" value="{{ $playground->price_per_180 }}" placeholder="@lang('messages.enter_price')" required>
                                         <div class="invalid-feedback">@lang('messages.please_enter_price')</div>
                                     </div>
-
-
                                 </div>
                             </div>
-
-                            <!-- end col -->
                         </div>
                         <div class="mb-3">
-                            <label for="choices-publish-visibility-input" class="form-label">
-                                @lang('messages.classification')
-                            </label>
+                            <label for="choices-publish-visibility-input" class="form-label">@lang('messages.classification')</label>
                             <select class="form-select" id="choices-publish-visibility-input" data-choices data-choices-search-false>
-
-                            @foreach($classification as $item)
-                                    <option value="{{ $item->id }}">
+                                @foreach($classification as $item)
+                                    <option value="{{ $item->id }}" @if($playground->classification == $item->id) selected @endif>
                                         @if(app()->getLocale() == 'ar')
                                             {{ $item->name_ar }}
                                         @else
@@ -175,44 +139,30 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="choices-publish-visibility-input" class="form-label">
-                                @lang('messages.player_type')
-                            </label>
+                            <label for="choices-players-visibility-input" class="form-label">@lang('messages.player_type')</label>
                             <select class="form-select" id="choices-players-visibility-input" data-choices data-choices-search-false>
-
                                 @foreach($players as $item)
-                                    <option value="{{ $item->id }}">
-                                        @if(app()->getLocale() == 'ar')
-                                            {{ $item->name_ar }}
-                                        @else
-                                            {{ $item->name_en }}
-                                        @endif
+                                    <option value="{{ $item->id }}" @if($playground->player == $item->id) selected @endif>
+                                        {{ app()->getLocale() == 'ar' ? $item->name_ar : $item->name_en }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <label for="choices-publish-status-input" class="form-label"> @lang('messages.status')</label>
-
+                            <label for="choices-publish-status-input" class="form-label">@lang('messages.status')</label>
                             <select class="form-select" id="choices-publish-status-input" data-choices data-choices-search-false>
-                                <option value="1" > @lang('messages.active')</option>
-                                <option value="0"  > @lang('messages.inactive')</option>
+                                <option value="0" @if(!$playground->is_active) selected @endif>@lang('messages.inactive')</option>
+                                <option value="1" @if($playground->is_active) selected @endif>@lang('messages.active')</option>
                             </select>
                         </div>
                     </div>
-                    <!-- end card body -->
                 </div>
-                <!-- end card -->
 
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">
-                            @lang('messages.service_provider')
-                        </h5>
-                        <button type="button" class="btn btn-primary">
-                            @lang('messages.add_new')
-                        </button>
+                        <h5 class="card-title mb-0">@lang('messages.service_provider')</h5>
+                        <button type="button" class="btn btn-primary">@lang('messages.add_new')</button>
                     </div>
                     <!-- end card body -->
                     <div class="card-body">
@@ -254,8 +204,8 @@
     <!-- Or versioned -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 
-    <script src="{{ URL::asset('build/js/admin/addPlayground.js') }}"></script>
+    <script src="{{ URL::asset('build/js/admin/editPlayground.js') }}"></script>
 
 
-    <script src="{{ URL::asset('build/js/app.js') }}"></script>
+    <script src="{{ URL::asset('/build/js/app.js') }}"></script>
 @endsection

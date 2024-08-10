@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // Handle form submission
-    document.getElementById('create-playground-form').addEventListener('submit', function (e) {
+    document.getElementById('edit-playground-form').addEventListener('submit', function (e) {
         e.preventDefault();
 
 
@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+        var  paygroundID=document.getElementById('product-id-input').value;
 
 
         var  name_ar=document.getElementById('product-title-input').value;
@@ -110,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const xhr = new XMLHttpRequest();
-        var url = `/api/admin/playgrounds`;
+        var url = `/api/admin/playgrounds/`+paygroundID;
         xhr.open('POST', url, true);
         xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('input[name="_token"]').value);
         xhr.setRequestHeader('lang', 'ar');

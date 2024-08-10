@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\clints;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Console\View\Components\Alert;
 
 class clintController extends Controller
 {
@@ -13,11 +12,54 @@ class clintController extends Controller
 
     public function index()
     {
-        $clients = User::all();
-        return view('clients', compact('clients'));
+        $clients = User::paginate(50);
+        return view('admin.clients.client', compact('clients'));
     }
+    public function getData(Request $request)
+    {
+        $column = $request->input('column', 'created_at');
+        $direction = $request->input('direction', 'asc');
+        $search = $request->input('search');
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $status = $request->input('status');
+        $phone = $request->input('phone');
+        $sport_type = $request->input('sport_type');
+        $age = $request->input('age');
 
+        $clients = User::with(['place', 'classificationSetting', 'playerSetting'])
+            ->where(function($query) use ($search) {
+                $query->where('name_ar', 'LIKE', "%$search%")
+                    ->orWhere('name_en', 'LIKE', "%$search%");
+            })
+            ->when($startDate && $endDate, function($query) use ($startDate, $endDate) {
+                return $query->whereBetween('created_at', [$startDate, $endDate]);
+            })
+            ->when($status !== 'all', function($query) use ($status) {
+                return $query->where('is_active', $status);
+            })
+            ->when($phone, function($query) use ($phone) {
+                return $query->whereHas('place', function($q) use ($phone) {
+                    $q->where('name', 'LIKE', "%$phone%");
+                });
+            })
+            ->when($sport_type, function($query) use ($sport_type) {
+                return $query->whereHas('classificationSetting', function($q) use ($sport_type) {
+                    $q->where('name', 'LIKE', "%$sport_type%");
+                });
+            })
+            ->when($age, function($query) use ($age) {
+                return $query->whereHas('playerSetting', function($q) use ($age) {
+                    $q->where('name', 'LIKE', "%$age%");
+                });
+            })
+            ->orderBy($column, $direction)
+            ->paginate(50);
 
+        return response()->json(
+            $clients
+        );
+    }
     public function store(Request $request)
     {
 

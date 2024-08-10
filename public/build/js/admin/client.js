@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var currentPage = 1;
     var totalPages = 1; // Total number of page
     var perPage = 50; // Number of users per page
-    var apiUrl = "/api/admin/getPlaygrounds"; // API endpoint to fetch user data
+    var apiUrl = "/api/admin/getData"; // API endpoint to fetch user data
     const userLanguage = window.languageSettings.locale; // Fallback for older browsers
 
     var formattedStartDate="";
@@ -14,14 +14,14 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log(userLanguage);
 
 
-        var status="all";
+    var status="all";
 
 
 
-        let typeField = document.getElementById("idStatus");
-        var typeVal =  new Choices(typeField, {
-            searchEnabled: false,
-        });
+    let typeField = document.getElementById("idStatus");
+    var typeVal =  new Choices(typeField, {
+        searchEnabled: false,
+    });
 
 
     flatpickr("#datepicker-range", {
@@ -30,13 +30,13 @@ document.addEventListener("DOMContentLoaded", function() {
         dateFormat: "d M, Y",
         range: true,
         onChange: function(selectedDates, dateStr, instance) {
-             formattedStartDate="";
-             formattedEndDate="";
+            formattedStartDate="";
+            formattedEndDate="";
             if (selectedDates.length === 2) {
                 var startDate = formatDatePicker(selectedDates[0]);
                 var endDate = formatDatePicker(selectedDates[1]);
-                 formattedStartDate = addDays(selectedDates[0], 1);
-                 formattedEndDate = addDays(selectedDates[1], 1);
+                formattedStartDate = addDays(selectedDates[0], 1);
+                formattedEndDate = addDays(selectedDates[1], 1);
                 console.log("Selected date range:", formattedStartDate, "to", formattedEndDate);
                 instance.element.value = startDate + " إلى " + endDate;
             }
@@ -71,15 +71,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
 
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         var xhttp = new XMLHttpRequest();
-        xhttp.onload = function () {
-            var json_records = JSON.parse(this.responseText);
-            totalPages = Math.ceil(json_records.total / perPage);
-            updateTable(json_records.data);
-            updatePaginationButtons();
-            toggleTableVisibility(json_records.data.length === 0);
-        };
         xhttp.open("GET", apiUrl + queryString);
+        xhttp.setRequestHeader("X-CSRF-TOKEN", token);
         xhttp.send();
     }
 
@@ -98,59 +93,45 @@ document.addEventListener("DOMContentLoaded", function() {
         var tableBody = document.getElementById('tableBody');
         tableBody.innerHTML = '';
         users.forEach(user => {
+            user.is_active = undefined;
+            user.age = undefined;
+            user.gender = undefined;
+            user.sport_type = undefined;
+            user.last_name = undefined;
+            user.first_name = undefined;
             var row = document.createElement('tr');
             row.innerHTML = `
-                <td scope="row">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
-                    </div>
-                </td>
-                <td class="id" style="display:none;"><a href="javascript:void(0);" class="fw-medium link-primary">${JSON.stringify(user, null, 2)}</a></td>
-                <td class="customer_name">
-                <div class="flex-shrink-0 me-3">
-                    <div class="avatar-sm bg-light rounded p-1">
-                        <img src="${user.place.logo ? user.place.logo : 'build/images/logo_sport.png'}" alt="" class="img-fluid d-block">
-                    </div>
+            <td scope="row">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
                 </div>
-                    </td>
-                <td class="email">${user.name_ar}</td>
-                                <td class="name_en">${user.name_en}</td>
-
-                    <td class="date">${userLanguage==="en" ? user.classification_setting.name_en : user.classification_setting.name_ar}</td>
-
-                    <td class="date">${userLanguage==="en" ? user.player_setting.name_en : user.player_setting.name_ar}</td>
-
-                     <td class="date">
-                ${userLanguage === "en" ?
-                `<b>Price for 60 min:</b> ${user.price_per_60} SAR <br>
-                     <b>Price for 90 min:</b> ${user.price_per_90} SAR <br>
-                     <b>Price for 120 min:</b> ${user.price_per_120} SAR <br>
-                     <b>Price for 180 min:</b> ${user.price_per_180} SAR` :
-                `<b>سعر 60 د:</b> ${user.price_per_60} ر.س <br>
-                     <b>سعر 90 د:</b> ${user.price_per_90} ر.س <br>
-                     <b>سعر 120 د:</b> ${user.price_per_120} ر.س <br>
-                     <b>سعر 180 د:</b> ${user.price_per_180} ر.س`
-            }
             </td>
-<td class="date">${formatDate(user.created_at,userLanguage)}</td>
-
-
-                <td class="status" >${isStatus(user.is_active)}</td>
-                <td>
-                    <ul class="list-inline hstack gap-2 mb-0">
-                        <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                             <a href="/admin/playgrounds/${user.id}/edit" class="text-primary d-inline-block edit-item-btn">
-                                <i class="ri-pencil-fill fs-16"></i>
-                            </a>
-                        </li>
-<!--                        <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">-->
-<!--                            <a class="text-danger d-inline-block remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal">-->
-<!--                                <i class="ri-delete-bin-5-fill fs-16"></i>-->
-<!--                            </a>-->
-<!--                        </li>-->
-                    </ul>
-                </td>
-            `;
+            <td class="first_name">${user.first_name}</td>
+            <td class="last_name">${user.last_name}</td>
+            <td class="phone">${user.phone}</td>
+            <td class="sport_type">${user.sport_type}</td>
+            <td class="gender">${user.gender}</td>
+            <td class="level">${user.level}</td>
+            <td class="age">${user.age}</td>
+            <td class="is_active">${user.is_active ? 'Active' : 'Inactive'}</td>
+            <td>
+                <ul class="list-inline hstack gap-2 mb-0">
+                    <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+                        <a href="/admin/users/${user.id}/edit" class="text-primary d-inline-block edit-item-btn">
+                            <i class="ri-pencil-fill fs-16"></i>
+                        </a>
+                    </li>
+                    <!-- Uncomment if remove functionality is needed -->
+                    <!--
+                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
+                        <a class="text-danger d-inline-block remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal">
+                            <i class="ri-delete-bin-5-fill fs-16"></i>
+                        </a>
+                    </li>
+                    -->
+                </ul>
+            </td>
+        `;
             tableBody.appendChild(row);
         });
     }

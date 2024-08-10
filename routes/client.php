@@ -22,9 +22,9 @@ Route::prefix('client')->group(function () {
         Route::put('/update/{id}', [AuthUserController::class, 'update']);
         Route::get('/profile', [AuthUserController::class, 'show']);
 
-        // Route::post('/users', [clintController::class, 'store']);
+         Route::post('/users', [clintController::class, 'store']);
         Route::post('/client/users', [clintController::class, 'store'])->name('users.store');
-        Route::get('/clients', [clintController::class, 'index'])->name('clients.index');
+//        Route::get('/clients', [clintController::class, 'index'])->name('clients.index');
         Route::post('/users/{id}', [clintController::class, 'update'])->name('users.update');
         // Route::get('{user}/edit', [clintController::class, 'edit'])->name('users.edit');
         Route::get('/clients/{client}/edit', [ClintController::class, 'edit'])->name('clients.edit');

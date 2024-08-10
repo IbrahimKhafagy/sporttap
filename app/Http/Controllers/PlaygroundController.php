@@ -60,38 +60,38 @@ class PlaygroundController extends Controller
             })
             ->orderBy($column, $direction)
             ->paginate(50);
-        foreach ($playgrounds as $playground) {
-            if($playground->place) {
-                if ($playground->place->logo) {
-                    $id=$playground->place->logo;
+        foreach ($playgrounds as $playgroundOne) {
+            if($playgroundOne->place) {
+                if ($playgroundOne->place->logo) {
+                    $id=$playgroundOne->place->logo;
                     $media = Media::find($id);
+
                     if ($media) {
                         $filePath = "storage/{$id}/{$media->file_name}";
 
                         // Append the file path to each user object
-                        $playground->place->logo = $filePath;
-                    } else {
-                        $playground->place->logo = null;
+                        $playgroundOne->place->logo = asset($filePath);
+
                     }
                 }
 
-                if ($playground->place->images) {
+                if ($playgroundOne->place->images) {
                    $images=[];
-                   foreach ($playground->place->images as $image) {
+                   foreach ($playgroundOne->place->images as $image) {
                        $media = Media::find($image);
                        if ($media) {
                            $filePath = "storage/{$image}/{$media->file_name}";
-                           $images[] = $filePath;
+                           $images[] = asset($filePath);
 
                        }
                    }
-                    $playground->place->images=$images;
+                    $playgroundOne->place->images=$images;
 
                 }
 
-                if ($playground->images) {
+                if ($playgroundOne->images) {
                     $images=[];
-                    foreach ($playground->images as $image) {
+                    foreach ($playgroundOne->images as $image) {
                         $media = Media::find($image);
                         if ($media) {
                             $filePath = "storage/{$image}/{$media->file_name}";
@@ -99,7 +99,7 @@ class PlaygroundController extends Controller
 
                         }
                     }
-                    $playground->images=$images;
+                    $playgroundOne->images=$images;
 
                 }
             }
@@ -183,8 +183,8 @@ class PlaygroundController extends Controller
 
         return response()->json([
             'status' => 200,
-            'msg' => 'تم انشاء ملعب جديد بنجاح',
-            'data' =>null
+            'msg' => __('messages.playground_created'),
+            'data' => null
         ]);
     }
 
@@ -192,15 +192,33 @@ class PlaygroundController extends Controller
 
 
 
-    public function show(Playground $playground)
+    public function show(int $playground)
     {
-//        $playgrounds = Playground::all();
-//        $places = Place::all();
-//        return view('playgrounds.playgrounds', compact('playgrounds','places'));
+        $playground = Playground::findOrFail($playground);
+        $classification = PlaceSetting::where('type', 'classification')->
+        where('is_active',true)->get();
+
+        $players = PlaceSetting::where('type', 'players')->
+        where('is_active',true)->get();
+
+        $places=Place::all();
+        if ($playground->images) {
+            $images=[];
+            foreach ($playground->images as $image) {
+                $media = Media::find($image);
+                if ($media) {
+                    $filePath = "storage/{$image}/{$media->file_name}";
+                    $images[] = asset("{$filePath}");
+
+                }
+            }
+            $playground->images=$images;
+
+        }
+
+        return view('admin.playgrounds.edit_playground', compact('playground','classification','players','places'));
     }
 
-
-    // Example controller method
     public function edit($id)
     {
         $playground = Playground::findOrFail($id);
@@ -215,37 +233,82 @@ class PlaygroundController extends Controller
         $price_per_120_options = [200, 300, 400]; // Example data
         $price_per_180_options = [250, 350, 450]; // Example data
 
-        return view('playgrounds.edit_playgrounds', compact('playground', 'places', 'name_ar_options', 'name_en_options', 'classifications', 'players', 'images', 'price_per_60_options', 'price_per_90_options', 'price_per_120_options', 'price_per_180_options'));
+        return view('admin.playgrounds.playgrounds', compact('playground', 'places', 'name_ar_options', 'name_en_options', 'classifications', 'players', 'images', 'price_per_60_options', 'price_per_90_options', 'price_per_120_options', 'price_per_180_options'));
     }
+    // Example controller method
 
-    public function update(Request $request,$id)
+
+    public function update(Request $request, $id)
     {
-        $places = Place::all();
-        $validatedData = $request->validate([
-            'place_id' => 'required|exists:places,id',
+        // Validate the playground data
+        $validator = Validator::make($request->all(), [
+            'place_id' => 'nullable|integer|exists:places,id',
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'classification' => 'nullable|exists:place_settings,id',
-            'player' => 'nullable|exists:place_settings,id',
-            'images' => 'nullable|string ',
-            'is_active' => 'boolean',
+            'classification' => 'nullable|integer',
+            'player' => 'nullable|string|max:255',
+            'images.*' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
             'price_per_60' => 'nullable|numeric',
             'price_per_90' => 'nullable|numeric',
             'price_per_120' => 'nullable|numeric',
             'price_per_180' => 'nullable|numeric',
-            'sale_price' => 'nullable|numeric',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        // تحديث الحديقة باستخدام البيانات المدخلة
-        $validatedData['is_active'] = $request->has('is_active') ? true : false;
+        $response = [
+            'status' => 401,
+            'msg' => "",
+            'data' => null
+        ];
+        if ($validator->fails()) {
+            $firstError = $validator->errors()->first();
+            $response['msg'] = $firstError;
+            return response()->json($response);
+        }
 
-        // Create the playground
-        $playground = Playground::findOrFail($id);
-        $playground->update($validatedData);
+        $playground = Playground::find($id);
+        if (!$playground) {
+            $response['msg'] = 'Playground not found';
+            return response()->json($response);
+        }
 
-        // العودة إلى الصفحة السابقة
-        return redirect()->route('admin.playgrounds.index')->with(compact('places'));
+        // Initialize an array to hold media IDs
+        $mediaIds = $playground->images ?: [];
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $fileName = $file->getClientOriginalName();
+                // Find or create an instance of TempMedia
+                $yourModel = TempMedia::firstOrCreate(['name' => $fileName]);
+                // Store the uploaded file in the 'images' collection
+                $media = $yourModel->addMedia($file)->toMediaCollection('images');
+                // Collect the media ID
+                $mediaIds[] = $media->id;
+            }
+        }
+
+        $playground->place_id = $request->input('place_id');
+        $playground->name_ar = $request->input('name_ar');
+        $playground->name_en = $request->input('name_en');
+        $playground->classification = $request->input('classification');
+        $playground->player = $request->input('player');
+        $playground->price_per_60 = $request->input('price_per_60');
+        $playground->price_per_90 = $request->input('price_per_90');
+        $playground->price_per_120 = $request->input('price_per_120');
+        $playground->price_per_180 = $request->input('price_per_180');
+        $playground->is_active = $request->input('is_active', false);
+        $playground->images = $mediaIds;
+        $playground->save();
+
+        return response()->json([
+            'status' => 200,
+            'msg' => __('messages.playground_update'),
+            'data' => null
+        ]);
     }
+
+
+
 
 
 

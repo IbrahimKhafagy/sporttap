@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('title')
-@lang('translation.customers')
+@lang('messages.Playground_menu')
 @endsection
 @section('css')
-<link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet "type="text/css" />
+<link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" >
 
 @endsection
 @section('content')
@@ -16,15 +16,14 @@
                 <div class="row g-4 align-items-center">
                     <div class="col-sm">
                         <div>
-                            <h5 class="card-title mb-0">الملاعب</h5>
+                            <h5 class="card-title mb-0">@lang('messages.playgrounds')</h5>
                         </div>
                     </div>
                     <div class="col-sm-auto">
                         <div class="d-flex flex-wrap align-items-start gap-2">
                             <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-                            <button type="button" class="btn btn-success add-btnt" onclick="window.location.href='/playgrounds/create'">
-                                <i class="ri-add-line align-bottom me-1"></i> اضافة ملعب جديد
-                            </button>
+                            <button type="button" class="btn btn-success add-btnt" onclick="window.location.href='/admin/playgrounds/create'">
+                                <i class="ri-add-line align-bottom me-1"></i>@lang('messages.Adding_a_new_stadium')</button>
 
                             {{--                            <button type="button" class="btn btn-info"><i class="ri-file-download-line align-bottom me-1"></i>--}}
 {{--                                Import</button>--}}
@@ -37,7 +36,7 @@
                     <div class="row g-3">
                         <div class="col-xl-6">
                             <div class="search-box">
-                                <input type="text" class="form-control search" placeholder="البحث عن ملعب، بالاسم عربي او بالاسم انجليزي ،أو شيء ما...">
+                                <input type="text" class="form-control search" placeholder="@lang('messages.Search')">
                                 <i class="ri-search-line search-icon"></i>
                             </div>
                         </div>
@@ -46,17 +45,17 @@
                             <div class="row g-3">
                                 <div class="col-sm-4">
                                     <div class="">
-                                        <input type="text" class="form-control flatpickr-input" id="datepicker-range" data-provider="flatpickr" data-date-format="d M, Y" data-range-date="true" placeholder="آختر التاريخ" readonly="readonly">
+                                        <input type="text" class="form-control flatpickr-input" id="datepicker-range" data-provider="flatpickr" data-date-format="d M, Y" data-range-date="true" placeholder="@lang('messages.date')" readonly="readonly">
                                     </div>
                                 </div>
                                 <!--end col-->
                                 <div class="col-sm-4">
                                     <div>
                                         <select class="form-control" data-plugin="choices" data-choices data-choices-search-false id="idStatus">
-                                            <option value="">الحالة</option>
-                                            <option value="all" selected>الكل</option>
-                                            <option value="1">نشط</option>
-                                            <option value="0">غير نشط</option>
+                                            <option value="">@lang('messages.status')</option>
+                                            <option value="all" selected>@lang('messages.all')</option>
+                                            <option value="1">@lang('messages.active')</option>
+                                            <option value="0">@lang('messages.inactive') </option>
                                         </select>
                                     </div>
                                 </div>
@@ -64,7 +63,7 @@
 
                                 <div class="col-sm-4">
                                     <div>
-                                        <button type="button" class="btn btn-primary w-100" onclick="performSearch();"> <i class="ri-equalizer-fill me-2 align-bottom"></i>تصفية</button>
+                                        <button type="button" class="btn btn-primary w-100" onclick="performSearch();"> <i class="ri-equalizer-fill me-2 align-bottom"></i>@lang('messages.filtering')</button>
                                     </div>
                                 </div>
                                 <!--end col-->
@@ -86,16 +85,15 @@
                                         </div>
                                     </th>
 
-                                    <th class="sort" data-sort="name">اللوجو</th>
-                                    <th class="sort" data-sort="name_ar" onclick="sortByColumn('name_ar')">الاسم عربي </th>
-                                    <th class="sort" data-sort="name_en" onclick="sortByColumn('name_en')">الاسم انجليزي</th>
-                                    <th class="sort" data-sort="classification" onclick="sortByColumn('classification')">التصنيف </th>
-                                    <th class="sort" data-sort="player" onclick="sortByColumn('player')"> نوع الملعب</th>
-                                    <th class="sort" data-sort="price" onclick="sortByColumn('price')"> السعر</th>
-                                    <th class="sort" data-sort="participants" onclick="sortByColumn('participants')"> تاريخ الانشاء</th>
-
-                                    <th class="sort" data-sort="status">الحالة</th>
-                                    <th class="sort" data-sort="action">اجراءات</th>
+                                    <th class="sort" data-sort="logo">@lang('messages.logo')</th>
+                                    <th class="sort" data-sort="name_ar" onclick="sortByColumn('name_ar')">@lang('messages.name_ar')</th>
+                                    <th class="sort" data-sort="name_en" onclick="sortByColumn('name_en')">@lang('messages.name_en')</th>
+                                    <th class="sort" data-sort="classification" onclick="sortByColumn('classification')">@lang('messages.classification')</th>
+                                    <th class="sort" data-sort="player" onclick="sortByColumn('player')">@lang('messages.player_type')</th>
+                                    <th class="sort" data-sort="price" onclick="sortByColumn('price')">@lang('messages.price')</th>
+                                    <th class="sort" data-sort="participants" onclick="sortByColumn('participants')">@lang('messages.creation_date')</th>
+                                    <th class="sort" data-sort="status">@lang('messages.status')</th>
+                                    <th class="sort" data-sort="action">@lang('messages.actions')</th>
                                 </tr>
                             </thead>
                             <tbody class="list form-check-all" id="tableBody">
@@ -106,20 +104,23 @@
                             <div class="text-center">
                                 <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
                                 </lord-icon>
-                                <h5 class="mt-2">عذرا! لم يتم العثور على أي نتائج</h5>
-                                <p class="text-muted mb-0">لقد قمنا بالبحث في أكثر من  {{$playgrounds->total()}}  ملعب، ولم نجد أي ملاعب يتناسبون مع بحثك.</p>
+                                <h5 class="mt-2">@lang('messages.no_results')</h5>
+                                <p class="text-muted mb-0">
+                                    @lang('messages.search_message', ['total' => $playgrounds->total()])
+                                </p>
                             </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
                         <div class="pagination-wrap hstack gap-2">
                             <a class="page-item pagination-prev disabled" href="#">
-                                السابق
+                                @lang('messages.previous')
                             </a>
                             <ul class="pagination listjs-pagination mb-0">5</ul>
                             <a class="page-item pagination-next" href="#">
-                                التالي
+                                @lang('messages.next')
                             </a>
+
                         </div>
                     </div>
                 </div>

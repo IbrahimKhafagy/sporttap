@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
 {
+    public function index()
+    {
+        $service = Service::paginate(50);
+        return view('admin.services.services', compact('service'));
+    }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

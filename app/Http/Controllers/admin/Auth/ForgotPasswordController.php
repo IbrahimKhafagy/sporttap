@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Auth;
+namespace App\Http\Controllers\admin\Auth;
 
 use Illuminate\Http\Request;
 use App\Mail\ResetPasswordMail;

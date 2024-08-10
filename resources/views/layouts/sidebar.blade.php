@@ -42,7 +42,7 @@
                  <!-- end Dashboard Menu -->
 
                 <li class="nav-item">
-                    <a href="Clients" class="nav-link">
+                    <a href="{{route('admin.clients.index')}}" class="nav-link">
                     <i class="mdi mdi-account-outline"></i> <span>@lang('messages.Clients')</span>
                     </a>
 
@@ -61,6 +61,13 @@
                             </li>
                         </ul>
                     </div>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{route('admin.services.index')}}" class="nav-link">
+                        <i class="mdi mdi-account-wrench-outline"></i><span>@lang('messages.service')</span>
+                    </a>
+
                 </li>
 
             </ul>
