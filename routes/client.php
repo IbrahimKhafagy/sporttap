@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\clints\clintController;
+use App\Http\Controllers\clients\ClientController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\user\auth\AuthUserController;
 use App\Http\Controllers\user\HomeController;
@@ -22,14 +22,14 @@ Route::prefix('client')->group(function () {
         Route::put('/update/{id}', [AuthUserController::class, 'update']);
         Route::get('/profile', [AuthUserController::class, 'show']);
 
-         Route::post('/users', [clintController::class, 'store']);
-        Route::post('/client/users', [clintController::class, 'store'])->name('users.store');
-//        Route::get('/clients', [clintController::class, 'index'])->name('clients.index');
-        Route::post('/users/{id}', [clintController::class, 'update'])->name('users.update');
-        // Route::get('{user}/edit', [clintController::class, 'edit'])->name('users.edit');
-        Route::get('/clients/{client}/edit', [ClintController::class, 'edit'])->name('clients.edit');
+         Route::post('/users', [ClientController::class, 'store']);
+        Route::post('/client/users', [ClientController::class, 'store'])->name('users.store');
+//        Route::get('/clients', [clientController::class, 'index'])->name('clients.index');
+        Route::post('/users/{id}', [ClientController::class, 'update'])->name('users.update');
+        // Route::get('{user}/edit', [clientController::class, 'edit'])->name('users.edit');
+        Route::get('/clients/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
 
-        Route::delete('{user}', [clintController::class, 'destroy'])->name('users.destroy');
+        Route::delete('{user}', [ClientController::class, 'destroy'])->name('users.destroy');
 
 
     // });

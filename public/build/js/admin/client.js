@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var currentPage = 1;
     var totalPages = 1; // Total number of page
     var perPage = 50; // Number of users per page
-    var apiUrl = "/api/admin/getData"; // API endpoint to fetch user data
+    var apiUrl = "/api/admin/allClient"; // API endpoint to fetch user data
     const userLanguage = window.languageSettings.locale; // Fallback for older browsers
 
     var formattedStartDate="";
@@ -71,10 +71,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
 
-        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         var xhttp = new XMLHttpRequest();
+        xhttp.onload = function () {
+            var json_records = JSON.parse(this.responseText);
+            totalPages = Math.ceil(json_records.total / perPage);
+            updateTable(json_records.data);
+            updatePaginationButtons();
+            toggleTableVisibility(json_records.data.length === 0);
+        };
         xhttp.open("GET", apiUrl + queryString);
-        xhttp.setRequestHeader("X-CSRF-TOKEN", token);
         xhttp.send();
     }
 
@@ -93,48 +98,175 @@ document.addEventListener("DOMContentLoaded", function() {
         var tableBody = document.getElementById('tableBody');
         tableBody.innerHTML = '';
         users.forEach(user => {
-            user.is_active = undefined;
-            user.age = undefined;
-            user.gender = undefined;
-            user.sport_type = undefined;
-            user.last_name = undefined;
-            user.first_name = undefined;
             var row = document.createElement('tr');
             row.innerHTML = `
-            <td scope="row">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
-                </div>
-            </td>
-            <td class="first_name">${user.first_name}</td>
-            <td class="last_name">${user.last_name}</td>
-            <td class="phone">${user.phone}</td>
-            <td class="sport_type">${user.sport_type}</td>
-            <td class="gender">${user.gender}</td>
-            <td class="level">${user.level}</td>
-            <td class="age">${user.age}</td>
-            <td class="is_active">${user.is_active ? 'Active' : 'Inactive'}</td>
-            <td>
-                <ul class="list-inline hstack gap-2 mb-0">
-                    <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                        <a href="/admin/users/${user.id}/edit" class="text-primary d-inline-block edit-item-btn">
-                            <i class="ri-pencil-fill fs-16"></i>
-                        </a>
-                    </li>
-                    <!-- Uncomment if remove functionality is needed -->
-                    <!--
-                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
-                        <a class="text-danger d-inline-block remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal">
-                            <i class="ri-delete-bin-5-fill fs-16"></i>
-                        </a>
-                    </li>
-                    -->
-                </ul>
-            </td>
-        `;
+                <td scope="row">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
+                    </div>
+                </td>
+                <td class="id" style="display:none;"><a href="javascript:void(0);" class="fw-medium link-primary">${JSON.stringify(user, null, 2)}</a></td>
+
+                <td class="first_name">${user.first_name}</td>
+                                <td class="last_name">${user.last_name}</td>
+
+                                                                <td class="phone">${user.phone}</td>
+
+
+                    <td class="sport_type">${  user.sport_type===null ?'-':user.sport_type==='Tennis' ?userLanguage==="en" ? 'Tennis' :  'تنس' :userLanguage==="en" ? 'Padel' : 'بادل'}</td>
+
+                    <td class="gender">${user.gender===null ?'-':user.gender === 'male' ? userLanguage === "en" ? 'Male' : 'ذكر' : userLanguage === "en" ? 'Female' : 'آنثي'}</td>
+
+                    <td class="level">${user.level===null ?'-' :isLevel(user.level) }</td>
+
+<td class="date">${formatDate(user.created_at, userLanguage)}</td>
+
+
+                <td class="status" >${isStatus(user.is_active)}</td>
+         <td>
+    <ul class="list-inline hstack gap-2 mb-0">
+
+        <!-- Details Button -->
+        <li class="list-inline-item details" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Details">
+            <a href="/admin/clients/${user.id}" class="btn btn-info btn-sm details-item-btn">
+                تفاصيل
+            </a>
+        </li>
+        <!-- Reservations Button -->
+        <li class="list-inline-item reservations" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Reservations">
+            <a href="/admin/playgrounds/${user.id}/reservations" class="btn btn-secondary btn-sm reservations-item-btn">
+                الحجوزات
+            </a>
+        </li>
+    </ul>
+</td>
+
+            `;
             tableBody.appendChild(row);
         });
     }
+
+    document.getElementById("showModal").addEventListener("show.bs.modal", function (e) {
+
+
+            // If the related target is an add button, clear modal fields and update modal title
+            document.getElementById('customername-field').value = "";
+            document.getElementById('email-field').value = "";
+            document.getElementById('phone-field').value = "";
+            var statusField = document.getElementById('status-field');
+            //
+            // if (statusVal) statusVal.destroy();
+            //
+            // statusVal = new Choices(statusField, {
+            //     searchEnabled: false,
+            // });
+            // statusVal.setChoiceByValue("");
+
+
+            document.getElementById('exampleModalLabel').innerText = 'اضافة عميل جديد';
+            document.getElementById('add-btn').innerText = 'اضف الآن';
+            document.getElementById("showModal").querySelector(".modal-footer").style.display = "block";
+            document.querySelector('.tablelist-form').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission behavior
+
+                // Retrieve form data from the modal
+
+                var name = document.getElementById('customername-field').value;
+                var phone = document.getElementById('phone-field').value;
+                var email = document.getElementById('email-field').value;
+                var password = document.getElementById("password-input").value
+                var status=  document.getElementById("status-field").value;
+
+                const customerNameField = document.getElementById('customername-field');
+                const customerEmailField = document.getElementById('email-field');
+                const customerPhoneField = document.getElementById('phone-field');
+                const customerPasswordField = document.getElementById('password-input');
+
+
+                var requestData = {};
+
+                // Prepare the HTTP request
+                var xhr = new XMLHttpRequest();
+                var url = `/api/admins/create_user`; // Replace this with your API endpoint URL
+                xhr.open('Post', url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+                // Send the request with the edited data
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        var response = JSON.parse(this.responseText);
+                        if (response.status === 200) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: response.msg,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                showCloseButton: true
+                            });
+
+                            fetchUsers(currentPage,'created_at','desc');
+                            document.getElementById("close-modal").click();
+
+                        } else {
+
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: response.msg,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                showCloseButton: true
+                            });
+                        }
+                    }
+                };
+                if (customerNameField.value.trim() === '') {
+                    customerNameField.classList.add('is-invalid');
+                    return
+                } else {
+                    customerNameField.classList.remove('is-invalid');
+                }
+
+                if (customerEmailField.value.trim() === '') {
+                    customerEmailField.classList.add('is-invalid');
+                    return
+
+                } else {
+                    customerEmailField.classList.remove('is-invalid');
+                }
+
+                if (customerPhoneField.value.trim() === '') {
+                    customerPhoneField.classList.add('is-invalid');
+                    return
+                } else {
+                    customerPhoneField.classList.remove('is-invalid');
+
+                }
+
+                if (customerPasswordField.value.trim() === '') {
+                    customerPasswordField.classList.add('is-invalid');
+                    return
+                } else {
+                    customerPasswordField.classList.remove('is-invalid');
+                }
+                requestData["name"]=name;
+                requestData["email"]=email;
+                requestData["phone"]=concatenatePhoneNumber();
+                requestData["password"]=password;
+                requestData["status"]=status;
+
+                xhr.send(JSON.stringify(requestData));
+
+            });
+
+
+
+
+    });
+
 
     // Function to update pagination buttons based on current page and total pages
 // Function to update pagination buttons based on current page and total pages
@@ -224,6 +356,15 @@ document.addEventListener("DOMContentLoaded", function() {
     function isStatus(val) {
         return val ? '<span class="badge bg-success-subtle text-success text-uppercase">نشظ</span>' : '<span class="badge bg-danger-subtle text-danger text-uppercase">غير نشط</span>';
     }
+
+    function isLevel(val) {
+        return val === 'junior'
+            ? `<span class="badge bg-success-subtle text-success text-uppercase">${userLanguage === "en" ? 'Junior' : 'مبتدئ'}</span>`
+            : val === 'middle'
+                ? `<span class="badge bg-danger-subtle text-danger text-uppercase">${userLanguage === "en" ? 'Middle' : 'متوسط'}</span>`
+                : `<span class="badge bg-secondary-subtle text-secondary text-uppercase">${userLanguage === "en" ? 'Advanced' : 'محترف'}</span>`;
+    }
+
 
     function formatDate(dateString, locale) {
         const options = { day: '2-digit', month: 'short', year: 'numeric' };

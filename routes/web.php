@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\clints\clintController;
+use App\Http\Controllers\clients\ClientController;
 use App\Http\Controllers\general\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -51,7 +51,9 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
             Route::get('/home', [HomeController::class, 'index'])->name('home');
             Route::get('/Clients', [HomeController::class, 'view']);
 
-            Route::get('/clients', [clintController::class, 'index'])->name('clients.index');
+
+            Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+            Route::get('/clients/{id}', [ClientController::class, 'show']);
 
 
             Route::get('/services', [ServiceController::class, 'index'])->name('services.index');

@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var currentPage = 1;
     var totalPages = 1; // Total number of page
     var perPage = 50; // Number of users per page
-    var apiUrl = "/api/admin/getClients"; // API endpoint to fetch user data
+    var apiUrl = "/api/admin/allServices"; // API endpoint to fetch user data
     const userLanguage = window.languageSettings.locale; // Fallback for older browsers
 
     var formattedStartDate="";
@@ -111,11 +111,17 @@ document.addEventListener("DOMContentLoaded", function() {
                     <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
                 </div>
             </td>
+              <td class="customer_name">
+                <div class="flex-shrink-0 me-3">
+                    <div class="avatar-sm bg-light rounded p-1">
+                        <img src="${user.image ? user.image : 'build/images/logo_sport.png'}" alt="" class="img-fluid d-block">
+                    </div>
+                </div>
+                    </td>
             <td class="first_name">${user.name_ar}</td>
             <td class="last_name">${user.name_en}</td>
-            <td class="phone">${user.media_id}</td>
-            <td class="sport_type">${user.created_at}</td>
-            <td class="is_active">${user.is_active ? 'Active' : 'Inactive'}</td>
+<td class="date">${formatDate(user.created_at,userLanguage)}</td>
+                <td class="status" >${isStatus(user.is_active)}</td>
             <td>
                 <ul class="list-inline hstack gap-2 mb-0">
                     <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">

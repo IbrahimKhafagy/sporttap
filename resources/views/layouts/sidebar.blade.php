@@ -31,40 +31,60 @@
             <div id="two-column-menu"></div>
             <ul class="navbar-nav text-center" id="navbar-nav">
                 <li class="menu-title">
-                    <span>@lang('messages.menu')</span>
+                    <span>لوحة التحكم</span>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="home" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="mdi mdi-home-outline"></i> <span>@lang('messages.dashboards')</span>
+                        <i class="mdi mdi-view-dashboard-outline"></i> <span>الاحصائيات</span>
                     </a>
                 </li>
-                 <!-- end Dashboard Menu -->
-
-                <li class="nav-item">
-                    <a href="{{route('admin.clients.index')}}" class="nav-link">
-                    <i class="mdi mdi-account-outline"></i> <span>@lang('messages.Clients')</span>
-                    </a>
-
+                <li class="menu-title">
+                    <span> ادراة الحجوزات</span>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarPlaces" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPlaces">
-                        <i class="mdi mdi-account-box-multiple-outline"></i> <span>@lang('messages.Places')</span>
+                    <a class="nav-link menu-link" href="{{route('admin.clients.index')}}" >
+                    <i class="mdi mdi-account-outline"></i> <span>العملاء</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarPlaces">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{route('admin.playgrounds.index')}}" class="nav-link">
-                                    <i class="bx bx-football"></i> <span>@lang('messages.playgrounds')</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{route('admin.services.index')}}" class="nav-link">
+                     <a class="nav-link menu-link" href="{{route('admin.clients.index')}}">
+                        <i class="mdi mdi-timer-outline"></i> <span>الحجوزات</span>
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('admin.clients.index')}}" >
+                        <i class="mdi mdi-account-group-outline"></i> <span>المباريات</span>
+                    </a>
+
+                </li>
+
+                <li class="menu-title">
+                    <span> اعدادات الملاعب</span>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link"href="{{route('admin.clients.index')}}" >
+                        <i class="mdi mdi-account-group-outline"></i> <span>اصحاب الملاعب</span>
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link"href="{{route('admin.playgrounds.index')}}">
+                        <i class="bx bx-football"></i> <span>@lang('messages.playgrounds')</span>
+                    </a>
+                </li>
+
+
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link"href="{{route('admin.services.index')}}">
                         <i class="mdi mdi-account-wrench-outline"></i><span>@lang('messages.service')</span>
                     </a>
 

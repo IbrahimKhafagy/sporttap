@@ -22,7 +22,7 @@
                         <div class="col-sm-auto">
                             <div class="d-flex flex-wrap align-items-start gap-2">
                                 <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-                                <button type="button" class="btn btn-success add-btnt" onclick="window.location.href='/admin/playgrounds/create'">
+                                <button type="button" class="btn btn-secondary add-btnt" onclick="window.location.href='/admin/playgrounds/create'">
                                     <i class="ri-add-line align-bottom me-1"></i>@lang('messages.add_service')</button>
 
                                 {{--                            <button type="button" class="btn btn-info"><i class="ri-file-download-line align-bottom me-1"></i>--}}
@@ -84,10 +84,9 @@
                                             <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                         </div>
                                     </th>
-
+                                    <th class="sort" data-sort="logo">@lang('messages.logo')</th>
                                     <th class="sort" data-sort="name_ar" onclick="sortByColumn('name_ar')">@lang('messages.name_ar')</th>
                                     <th class="sort" data-sort="name_en" onclick="sortByColumn('name_en')">@lang('messages.name_en')</th>
-                                    <th class="sort" data-sort="media_id" onclick="sortByColumn('media_id')">@lang('messages.media_id')</th>
                                     <th class="sort" data-sort="created_at" onclick="sortByColumn('created_at')">@lang('messages.creation_date')</th>
                                     <th class="sort" data-sort="status">@lang('messages.is_active')</th>
                                     <th class="sort" data-sort="action">@lang('messages.actions')</th>

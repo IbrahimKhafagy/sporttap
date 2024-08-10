@@ -191,3 +191,23 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Tajawal', sans-serif!important;
 
 }
+.menu-title {
+    letter-spacing: .05em;
+    cursor: default;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #838fb9 !important;
+    font-weight: 600;
+}
+.navbar-menu .navbar-nav .nav-link {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: .625rem 1.5rem;
+    color: #838fb9 !important;
+    font-size: .9375rem;
+    font-family: hkgrotesk, sans-serif;
+}

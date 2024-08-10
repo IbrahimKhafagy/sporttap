@@ -22,7 +22,7 @@
                         <div class="col-sm-auto">
                             <div class="d-flex flex-wrap align-items-start gap-2">
                                 <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-                                <button type="button" class="btn btn-success add-btnt" onclick="window.location.href='/admin/playgrounds/create'">
+                                <button type="button" class="btn btn-secondary add-btnt" onclick="window.location.href='/admin/playgrounds/create'">
                                     <i class="ri-add-line align-bottom me-1"></i>@lang('messages.add_client')</button>
 
                                 {{--                            <button type="button" class="btn btn-info"><i class="ri-file-download-line align-bottom me-1"></i>--}}
@@ -91,7 +91,8 @@
                                     <th class="sort" data-sort="sport_type" onclick="sortByColumn('sport_type')">@lang('messages.sport_type')</th>
                                     <th class="sort" data-sort="gender" onclick="sortByColumn('gender')">@lang('messages.gender')</th>
                                     <th class="sort" data-sort="level" onclick="sortByColumn('level')">@lang('messages.level')</th>
-                                    <th class="sort" data-sort="age" onclick="sortByColumn('age')">@lang('messages.age')</th>
+                                    <th class="sort" data-sort="participants" onclick="sortByColumn('participants')">@lang('messages.creation_date')</th>
+
                                     <th class="sort" data-sort="status">@lang('messages.is_active')</th>
                                     <th class="sort" data-sort="action">@lang('messages.actions')</th>
                                 </tr>
@@ -149,8 +150,9 @@
     <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ar.js"></script>
 
-    <script src="{{ URL::asset('build/js/admin/client.js') }}"></script>
     <script src="{{ URL::asset('build/libs/multi.js/multi.min.js') }}"></script>
+    <script src="{{ URL::asset('build/js/app.js') }}"></script>
+    <script src="{{ URL::asset('build/js/admin/client.js') }}"></script>
 
     <script>
         window.languageSettings = {
@@ -158,7 +160,6 @@
             messages: @json(__('messages'))
         };
     </script>
-    <script src="{{ URL::asset('build/js/app.js') }}"></script>
 
 
 @endsection
