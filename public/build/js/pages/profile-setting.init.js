@@ -141,7 +141,7 @@ function new_link() {
     div1.innerHTML = document.getElementById('newForm').innerHTML + delLink;
 
     document.getElementById('newlink').appendChild(div1);
-    
+
     var genericExamples = document.querySelectorAll("[data-trigger]");
     Array.from(genericExamples).forEach(function (genericExamp) {
         var element = genericExamp;
@@ -159,3 +159,4 @@ function deleteEl(eleId) {
     var parentEle = d.getElementById('newlink');
     parentEle.removeChild(ele);
 }
+

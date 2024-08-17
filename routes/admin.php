@@ -24,6 +24,7 @@ Route::prefix('admin')->group(function () {
 
     // get all clients
     Route::get('/allClient', [ClientController::class, 'getAllClient']);
+
     Route::get('/allServices', [ServiceController::class, 'getAllServices']);
 
 

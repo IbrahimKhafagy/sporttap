@@ -123,21 +123,14 @@ document.addEventListener("DOMContentLoaded", function() {
 <td class="date">${formatDate(user.created_at,userLanguage)}</td>
                 <td class="status" >${isStatus(user.is_active)}</td>
             <td>
-                <ul class="list-inline hstack gap-2 mb-0">
-                    <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                        <a href="/admin/users/${user.id}/edit" class="text-primary d-inline-block edit-item-btn">
-                            <i class="ri-pencil-fill fs-16"></i>
-                        </a>
-                    </li>
-                    <!-- Uncomment if remove functionality is needed -->
-                    <!--
-                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
-                        <a class="text-danger d-inline-block remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal">
-                            <i class="ri-delete-bin-5-fill fs-16"></i>
-                        </a>
-                    </li>
-                    -->
-                </ul>
+               <ul class="list-inline hstack gap-2 mb-0">
+    <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+        <a href="javascript:void(0);" class="text-primary d-inline-block edit-item-btn" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-id="{{ $service->id }}">
+            <i class="ri-pencil-fill fs-16"></i>
+        </a>
+    </li>
+</ul>
+
             </td>
         `;
             tableBody.appendChild(row);
@@ -230,7 +223,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to determine status
     function isStatus(val) {
-        return val ? '<span class="badge bg-success-subtle text-success text-uppercase">نشظ</span>' : '<span class="badge bg-danger-subtle text-danger text-uppercase">غير نشط</span>';
+        return val
+            ? '<span class="badge bg-success-subtle text-success text-uppercase">' + (userLanguage === "en" ? 'Active' : 'نشط') + '</span>'
+            : '<span class="badge bg-danger-subtle text-danger text-uppercase">' + (userLanguage === "en" ? 'Inactive' : 'غير نشط') + '</span>';
     }
 
     function formatDate(dateString, locale) {

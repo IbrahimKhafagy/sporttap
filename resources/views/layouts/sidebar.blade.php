@@ -31,48 +31,45 @@
             <div id="two-column-menu"></div>
             <ul class="navbar-nav text-center" id="navbar-nav">
                 <li class="menu-title">
-                    <span>لوحة التحكم</span>
+                    <span>@lang('messages.Control_panel')</span>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="home" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="mdi mdi-view-dashboard-outline"></i> <span>الاحصائيات</span>
+                        <i class="mdi mdi-view-dashboard-outline"></i> <span>@lang('messages.statistics')</span>
                     </a>
                 </li>
                 <li class="menu-title">
-                    <span> ادراة الحجوزات</span>
+                    <span>@lang('messages.menu')</span>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('admin.clients.index')}}" >
-                    <i class="mdi mdi-account-outline"></i> <span>العملاء</span>
+                    <i class="mdi mdi-account-outline"></i> <span>@lang('messages.clients')</span>
                     </a>
 
                 </li>
 
                 <li class="nav-item">
                      <a class="nav-link menu-link" href="{{route('admin.clients.index')}}">
-                        <i class="mdi mdi-timer-outline"></i> <span>الحجوزات</span>
+                        <i class="mdi mdi-timer-outline"></i> <span>@lang('messages.reservations')</span>
                     </a>
-
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('admin.clients.index')}}" >
-                        <i class="mdi mdi-account-group-outline"></i> <span>المباريات</span>
+                        <i class="mdi mdi-account-group-outline"></i> <span>@lang('messages.matches')</span>
                     </a>
-
                 </li>
 
                 <li class="menu-title">
-                    <span> اعدادات الملاعب</span>
+                    <span>@lang('messages.field_settings')</span>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link"href="{{route('admin.clients.index')}}" >
-                        <i class="mdi mdi-account-group-outline"></i> <span>اصحاب الملاعب</span>
+                        <i class="mdi mdi-account-group-outline"></i> <span>@lang('messages.field_owners')</span>
                     </a>
-
                 </li>
 
                 <li class="nav-item">

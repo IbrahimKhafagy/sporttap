@@ -123,149 +123,29 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
                 <td class="status" >${isStatus(user.is_active)}</td>
-         <td>
+        <td>
     <ul class="list-inline hstack gap-2 mb-0">
-
         <!-- Details Button -->
-        <li class="list-inline-item details" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Details">
+        <li class="list-inline-item details" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="${userLanguage === "en" ? 'Details' : 'تفاصيل'}">
             <a href="/admin/clients/${user.id}" class="btn btn-info btn-sm details-item-btn">
-                تفاصيل
+                ${userLanguage === "en" ? 'Details' : 'تفاصيل'}
             </a>
         </li>
         <!-- Reservations Button -->
-        <li class="list-inline-item reservations" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Reservations">
-            <a href="/admin/playgrounds/${user.id}/reservations" class="btn btn-secondary btn-sm reservations-item-btn">
-                الحجوزات
+        <li class="list-inline-item reservations" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="${userLanguage === "en" ? 'Reservations' : 'الحجوزات'}">
+            <a href="/admin/client/${user.id}/experience" class="btn btn-secondary btn-sm reservations-item-btn">
+                ${userLanguage === "en" ? 'Reservations' : 'الحجوزات'}
             </a>
         </li>
     </ul>
 </td>
+
 
             `;
             tableBody.appendChild(row);
         });
     }
 
-    document.getElementById("showModal").addEventListener("show.bs.modal", function (e) {
-
-
-            // If the related target is an add button, clear modal fields and update modal title
-            document.getElementById('customername-field').value = "";
-            document.getElementById('email-field').value = "";
-            document.getElementById('phone-field').value = "";
-            var statusField = document.getElementById('status-field');
-            //
-            // if (statusVal) statusVal.destroy();
-            //
-            // statusVal = new Choices(statusField, {
-            //     searchEnabled: false,
-            // });
-            // statusVal.setChoiceByValue("");
-
-
-            document.getElementById('exampleModalLabel').innerText = 'اضافة عميل جديد';
-            document.getElementById('add-btn').innerText = 'اضف الآن';
-            document.getElementById("showModal").querySelector(".modal-footer").style.display = "block";
-            document.querySelector('.tablelist-form').addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent the default form submission behavior
-
-                // Retrieve form data from the modal
-
-                var name = document.getElementById('customername-field').value;
-                var phone = document.getElementById('phone-field').value;
-                var email = document.getElementById('email-field').value;
-                var password = document.getElementById("password-input").value
-                var status=  document.getElementById("status-field").value;
-
-                const customerNameField = document.getElementById('customername-field');
-                const customerEmailField = document.getElementById('email-field');
-                const customerPhoneField = document.getElementById('phone-field');
-                const customerPasswordField = document.getElementById('password-input');
-
-
-                var requestData = {};
-
-                // Prepare the HTTP request
-                var xhr = new XMLHttpRequest();
-                var url = `/api/admins/create_user`; // Replace this with your API endpoint URL
-                xhr.open('Post', url, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.setRequestHeader('Accept', 'application/json');
-                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-
-                // Send the request with the edited data
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        var response = JSON.parse(this.responseText);
-                        if (response.status === 200) {
-                            Swal.fire({
-                                position: 'center',
-                                icon: 'success',
-                                title: response.msg,
-                                showConfirmButton: false,
-                                timer: 2000,
-                                showCloseButton: true
-                            });
-
-                            fetchUsers(currentPage,'created_at','desc');
-                            document.getElementById("close-modal").click();
-
-                        } else {
-
-                            Swal.fire({
-                                position: 'center',
-                                icon: 'error',
-                                title: response.msg,
-                                showConfirmButton: false,
-                                timer: 2000,
-                                showCloseButton: true
-                            });
-                        }
-                    }
-                };
-                if (customerNameField.value.trim() === '') {
-                    customerNameField.classList.add('is-invalid');
-                    return
-                } else {
-                    customerNameField.classList.remove('is-invalid');
-                }
-
-                if (customerEmailField.value.trim() === '') {
-                    customerEmailField.classList.add('is-invalid');
-                    return
-
-                } else {
-                    customerEmailField.classList.remove('is-invalid');
-                }
-
-                if (customerPhoneField.value.trim() === '') {
-                    customerPhoneField.classList.add('is-invalid');
-                    return
-                } else {
-                    customerPhoneField.classList.remove('is-invalid');
-
-                }
-
-                if (customerPasswordField.value.trim() === '') {
-                    customerPasswordField.classList.add('is-invalid');
-                    return
-                } else {
-                    customerPasswordField.classList.remove('is-invalid');
-                }
-                requestData["name"]=name;
-                requestData["email"]=email;
-                requestData["phone"]=concatenatePhoneNumber();
-                requestData["password"]=password;
-                requestData["status"]=status;
-
-                xhr.send(JSON.stringify(requestData));
-
-            });
-
-
-
-
-    });
 
 
     // Function to update pagination buttons based on current page and total pages
@@ -354,8 +234,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to determine status
     function isStatus(val) {
-        return val ? '<span class="badge bg-success-subtle text-success text-uppercase">نشظ</span>' : '<span class="badge bg-danger-subtle text-danger text-uppercase">غير نشط</span>';
+        return val
+            ? '<span class="badge bg-success-subtle text-success text-uppercase">' + (userLanguage === "en" ? 'Active' : 'نشط') + '</span>'
+            : '<span class="badge bg-danger-subtle text-danger text-uppercase">' + (userLanguage === "en" ? 'Inactive' : 'غير نشط') + '</span>';
     }
+
 
     function isLevel(val) {
         return val === 'junior'
@@ -421,5 +304,111 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initial fetch to load the first page of users
     fetchUsers(currentPage,'created_at','desc');
 });
+// document.getElementById("showModal").addEventListener("show.bs.modal", function (e) {
+//     // If the related target is an add button, clear modal fields and update modal title
+//     document.getElementById('customername-field').value = "";
+//     document.getElementById('email-field').value = "";
+//     document.getElementById('phone-field').value = "";
+//     document.getElementById('status-field').value = ""; // Added missing field reset
+//
+//     document.getElementById('exampleModalLabel').innerText =  'اضافة عميل جديد'; // Update this text as needed
+//     document.getElementById('add-btn').innerText = 'اضف الآن'; // Update this text as needed
+//     document.getElementById("showModal").querySelector(".modal-footer").style.display = "block";
+//
+//     document.querySelector('.tablelist-form').addEventListener('submit', function(event) {
+//         event.preventDefault(); // Prevent the default form submission behavior
+//
+//         // Retrieve form data from the modal
+//         var name = document.getElementById('customername-field').value;
+//         var phone = document.getElementById('phone-field').value;
+//         var email = document.getElementById('email-field').value;
+//         var password = document.getElementById('password-input') ? document.getElementById('password-input').value : ''; // Handle optional field
+//         var status = document.getElementById('status-field') ? document.getElementById('status-field').value : ''; // Handle optional field
+//
+//         const customerNameField = document.getElementById('customername-field');
+//         const customerEmailField = document.getElementById('email-field');
+//         const customerPhoneField = document.getElementById('phone-field');
+//         const customerPasswordField = document.getElementById('password-input');
+//
+//         var requestData = {
+//             name: name,
+//             email: email,
+//             phone: phone,
+//             password: password,
+//             status: status
+//         };
+//
+//         // Prepare the HTTP request
+//         var xhr = new XMLHttpRequest();
+//         var url = '{{ route("clients.updateMissingData") }}'; // Replace with your route name
+//         xhr.open('POST', url, true);
+//         xhr.setRequestHeader('Content-Type', 'application/json');
+//         xhr.setRequestHeader('Accept', 'application/json');
+//         xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+//
+//         // Send the request with the edited data
+//         xhr.onreadystatechange = function() {
+//             if (xhr.readyState === XMLHttpRequest.DONE) {
+//                 var response = JSON.parse(this.responseText);
+//                 if (xhr.status === 200 && response.success) {
+//                     Swal.fire({
+//                         position: 'center',
+//                         icon: 'success',
+//                         title: response.message,
+//                         showConfirmButton: false,
+//                         timer: 2000,
+//                         showCloseButton: true
+//                     });
+//
+//                     // Refresh the user data or page
+//                     fetchUsers(currentPage, 'created_at', 'desc');
+//                     document.getElementById("close-modal").click();
+//                 } else {
+//                     Swal.fire({
+//                         position: 'center',
+//                         icon: 'error',
+//                         title: response.message,
+//                         showConfirmButton: false,
+//                         timer: 2000,
+//                         showCloseButton: true
+//                     });
+//                 }
+//             }
+//         };
+//
+//         // Validation
+//         if (customerNameField.value.trim() === '') {
+//             customerNameField.classList.add('is-invalid');
+//             return;
+//         } else {
+//             customerNameField.classList.remove('is-invalid');
+//         }
+//
+//         if (customerEmailField.value.trim() === '') {
+//             customerEmailField.classList.add('is-invalid');
+//             return;
+//         } else {
+//             customerEmailField.classList.remove('is-invalid');
+//         }
+//
+//         if (customerPhoneField.value.trim() === '') {
+//             customerPhoneField.classList.add('is-invalid');
+//             return;
+//         } else {
+//             customerPhoneField.classList.remove('is-invalid');
+//         }
+//
+//         if (customerPasswordField && customerPasswordField.value.trim() === '') {
+//             customerPasswordField.classList.add('is-invalid');
+//             return;
+//         } else if (customerPasswordField) {
+//             customerPasswordField.classList.remove('is-invalid');
+//         }
+//
+//         xhr.send(JSON.stringify(requestData));
+//     });
+// });
+
+
 
 

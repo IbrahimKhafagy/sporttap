@@ -241,7 +241,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to determine status
     function isStatus(val) {
-        return val ? '<span class="badge bg-success-subtle text-success text-uppercase">نشظ</span>' : '<span class="badge bg-danger-subtle text-danger text-uppercase">غير نشط</span>';
+        return val
+            ? '<span class="badge bg-success-subtle text-success text-uppercase">' + (userLanguage === "en" ? 'Active' : 'نشط') + '</span>'
+            : '<span class="badge bg-danger-subtle text-danger text-uppercase">' + (userLanguage === "en" ? 'Inactive' : 'غير نشط') + '</span>';
     }
 
     function formatDate(dateString, locale) {

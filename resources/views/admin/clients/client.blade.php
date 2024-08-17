@@ -16,14 +16,16 @@
                     <div class="row g-4 align-items-center">
                         <div class="col-sm">
                             <div>
-                                <h5 class="card-title mb-0">@lang('messages.Clients')</h5>
+                                <h5 class="card-title mb-0">@lang('messages.clients')</h5>
                             </div>
                         </div>
                         <div class="col-sm-auto">
                             <div class="d-flex flex-wrap align-items-start gap-2">
                                 <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-                                <button type="button" class="btn btn-secondary add-btnt" onclick="window.location.href='/admin/playgrounds/create'">
-                                    <i class="ri-add-line align-bottom me-1"></i>@lang('messages.add_client')</button>
+                                <button type="button" class="btn btn-secondary add-btnt" data-bs-toggle="modal" data-bs-target="#addClientModal">
+                                    <i class="ri-add-line align-bottom me-1"></i>@lang('messages.add_client')
+                                </button>
+
 
                                 {{--                            <button type="button" class="btn btn-info"><i class="ri-file-download-line align-bottom me-1"></i>--}}
                                 {{--                                Import</button>--}}
@@ -133,8 +135,183 @@
 
         </div>
         <!--end col-->
+        <!-- Modal -->
+        <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addClientModalLabel">@lang('messages.add_new_client')</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('admin.clients.store') }}" method="POST">
+                            {{csrf_field()}}
+
+
+                            <div class="row mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <div class="col-6">
+                                    <label for="first_name" class="form-label">@lang('messages.first_name')</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" required>
+                                </div>
+                                <div class="col-6">
+                                    <label for="last_name" class="form-label"> @lang('messages.last_name')</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <div class="col-6">
+                                    <label for="phone" class="form-label">@lang('messages.phone')</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" required>
+                                </div>
+                                <div class="col-6">
+                                    <label for="sport_type" class="form-label">@lang('messages.sport_type')</label>
+                                    <select class="form-select" id="sport_type" name="sport_type" >
+                                        <option value="" disabled selected>@lang('messages.choose_sport_type')</option>
+                                        <option value="Tennis">@lang('messages.tennis')</option>
+                                        <option value="Padel">@lang('messages.padel')</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <div class="col-6">
+                                    <label for="gender" class="form-label">@lang('messages.gender')</label>
+                                    <select class="form-select" id="gender" name="gender" >
+                                        <option value="" disabled selected>@lang('messages.choose_gender')</option>
+                                        <option value="male">@lang('messages.male')</option>
+                                        <option value="female">@lang('messages.female')</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label for="level" class="form-label">@lang('messages.level')</label>
+                                    <select class="form-select" id="level" name="level" >
+                                        <option value="" disabled selected>@lang('messages.choose_level')</option>
+                                        <option value="Junior">@lang('messages.junior')</option>
+                                        <option value="Middle">@lang('messages.middle')</option>
+                                        <option value="Advanced">@lang('messages.advanced')</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <div class="col-6">
+                                    <label for="age" class="form-label">@lang('messages.age')</label>
+                                    <select class="form-select" id="age" name="age" >
+                                        <option value="" disabled selected>@lang('messages.choose_age')</option>
+                                        <option value="18-30">@lang('messages.age_18_30')</option>
+                                        <option value="30-40">@lang('messages.age_30_40')</option>
+                                        <option value="40-50">@lang('messages.age_40_50')</option>
+                                        <option value="50+">@lang('messages.age_50_plus')</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label for="is_active" class="form-label">@lang('messages.status')</label>
+                                    <select class="form-select" id="is_active" name="is_active" >
+                                        <option value="" disabled selected>@lang('messages.choose_status')</option>
+                                        <option value="1">@lang('messages.active')</option>
+                                        <option value="0">@lang('messages.inactive')</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">@lang('messages.save')</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
     <!--end row-->
+    <!-- Modal -->
+    <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addClientModalLabel">@lang('messages.add_new_client')</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('admin.clients.store') }}" method="POST">
+                         @csrf
+
+
+                        <div class="row mb-3" style="font-family: 'Tajawal', sans-serif;">
+                            <div class="col-6">
+                                <label for="first_name" class="form-label">@lang('messages.first_name')</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="last_name" class="form-label"> @lang('messages.last_name')</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3" style="font-family: 'Tajawal', sans-serif;">
+                            <div class="col-6">
+                                <label for="phone" class="form-label">@lang('messages.phone')</label>
+                                <input type="text" class="form-control" id="phone" name="phone" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="sport_type" class="form-label">@lang('messages.sport_type')</label>
+                                <select class="form-select" id="sport_type" name="sport_type" required>
+                                    <option value="" disabled selected>@lang('messages.choose_sport_type')</option>
+                                    <option value="Tennis">@lang('messages.tennis')</option>
+                                    <option value="Padel">@lang('messages.padel')</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3" style="font-family: 'Tajawal', sans-serif;">
+                            <div class="col-6">
+                                <label for="gender" class="form-label">@lang('messages.gender')</label>
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="" disabled selected>@lang('messages.choose_gender')</option>
+                                    <option value="male">@lang('messages.male')</option>
+                                    <option value="female">@lang('messages.female')</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="level" class="form-label">@lang('messages.level')</label>
+                                <select class="form-select" id="level" name="level" required>
+                                    <option value="" disabled selected>@lang('messages.choose_level')</option>
+                                    <option value="Junior">@lang('messages.junior')</option>
+                                    <option value="Middle">@lang('messages.middle')</option>
+                                    <option value="Advanced">@lang('messages.advanced')</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3" style="font-family: 'Tajawal', sans-serif;">
+                            <div class="col-6">
+                                <label for="age" class="form-label">@lang('messages.age')</label>
+                                <select class="form-select" id="age" name="age" required>
+                                    <option value="" disabled selected>@lang('messages.choose_age')</option>
+                                    <option value="18-30">@lang('messages.age_18_30')</option>
+                                    <option value="30-40">@lang('messages.age_30_40')</option>
+                                    <option value="40-50">@lang('messages.age_40_50')</option>
+                                    <option value="50+">@lang('messages.age_50_plus')</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="is_active" class="form-label">@lang('messages.status')</label>
+                                <select class="form-select" id="is_active" name="is_active" required>
+                                    <option value="" disabled selected>@lang('messages.choose_status')</option>
+                                    <option value="1">@lang('messages.active')</option>
+                                    <option value="0">@lang('messages.inactive')</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">@lang('messages.save')</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 @endsection
 @section('script')
     <script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>

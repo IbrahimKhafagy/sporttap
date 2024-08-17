@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    @lang('translation.settings')
+    @lang('messages.profile')
 @endsection
 @section('content')
     <div class="position-relative mx-n4 mt-n4" style="height: 100px;">
@@ -21,91 +21,53 @@
                             <img src="{{ URL::asset('build/images/users/avatar-1.jpg') }}"
                                 class="rounded-circle avatar-xl img-thumbnail user-profile-image  shadow"
                                 alt="user-profile-image">
-                            <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                                <input id="profile-img-file-input" type="file" class="profile-img-file-input">
-                                <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
-                                    <span class="avatar-title rounded-circle bg-light text-body shadow">
-                                        <i class="ri-camera-fill"></i>
-                                    </span>
-                                </label>
-                            </div>
                         </div>
                         <h5 class="fs-16 mb-1">{{$client->first_name ." ".$client->last_name}}</h5>
-                        <p class="text-muted mb-0">محترف</p>
+                        <p class="text-muted mb-0">
+                            @lang("levels.{$client->level}", [], $locale ?? app()->getLocale())
+                        </p>
                     </div>
                 </div>
             </div>
             <!--end card-->
+            @php
+                $user = auth()->user(); // جلب المستخدم الحالي
+                $fieldsIncomplete = is_null($client->age) || is_null($client->level) || is_null($client->gender) || is_null($client->sport_type);
+
+                // إذا كانت جميع الحقول مكتملة، الحساب يكون 100% مكتمل
+                $completionPercentage = $fieldsIncomplete ? 70 : 100;
+            @endphp
+
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-5">
                         <div class="flex-grow-1">
-                            <h5 class="card-title mb-0">استكمال الحساب   </h5>
+                            <h5 class="card-title mb-0">
+                                @if($completionPercentage < 100)
+                                    @lang('messages.complete_account')
+                                @else
+                                    @lang('messages.account_completed')
+                                @endif
+                            </h5>
                         </div>
                         <div class="flex-shrink-0">
-                            <a  href="#showModal" data-bs-toggle="modal" class="badge bg-light text-primary fs-12" >
-                                <i
-                                    class="ri-edit-box-line align-bottom me-1"></i> تعديل</a>
+                            @if($completionPercentage < 100)
+                                <a href="#showModal" data-bs-toggle="modal" class="badge bg-light text-primary fs-12">
+                                    <i class="ri-edit-box-line align-bottom me-1"></i> @lang('messages.edit')
+                                </a>
+                            @endif
                         </div>
                     </div>
                     <div class="progress animated-progress custom-progress progress-label">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 70%" aria-valuenow="70"
-                            aria-valuemin="0" aria-valuemax="100">
-                            <div class="label">70%</div>
+                        <div class="progress-bar {{ $completionPercentage < 100 ? 'bg-danger' : 'bg-success' }}" role="progressbar" style="width: {{ $completionPercentage }}%" aria-valuenow="{{ $completionPercentage }}"
+                             aria-valuemin="0" aria-valuemax="100">
+                            <div class="label">{{ $completionPercentage }}%</div>
                         </div>
                     </div>
                 </div>
             </div>
-{{--            <div class="card">--}}
-{{--                <div class="card-body">--}}
-{{--                    <div class="d-flex align-items-center mb-4">--}}
-{{--                        <div class="flex-grow-1">--}}
-{{--                            <h5 class="card-title mb-0">Portfolio</h5>--}}
-{{--                        </div>--}}
-{{--                        <div class="flex-shrink-0">--}}
-{{--                            <a href="javascript:void(0);" class="badge bg-light text-primary fs-12"><i--}}
-{{--                                    class="ri-add-fill align-bottom me-1"></i> Add</a>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="mb-3 d-flex">--}}
-{{--                        <div class="avatar-xs d-block flex-shrink-0 me-3">--}}
-{{--                            <span class="avatar-title rounded-circle fs-16 bg-body text-body shadow">--}}
-{{--                                <i class="ri-github-fill"></i>--}}
-{{--                            </span>--}}
-{{--                        </div>--}}
-{{--                        <input type="email" class="form-control" id="gitUsername" placeholder="Username"--}}
-{{--                            value="@daveadame">--}}
-{{--                    </div>--}}
-{{--                    <div class="mb-3 d-flex">--}}
-{{--                        <div class="avatar-xs d-block flex-shrink-0 me-3">--}}
-{{--                            <span class="avatar-title rounded-circle fs-16 bg-primary shadow">--}}
-{{--                                <i class="ri-global-fill"></i>--}}
-{{--                            </span>--}}
-{{--                        </div>--}}
-{{--                        <input type="text" class="form-control" id="websiteInput" placeholder="www.example.com"--}}
-{{--                            value="www.velzon.com">--}}
-{{--                    </div>--}}
-{{--                    <div class="mb-3 d-flex">--}}
-{{--                        <div class="avatar-xs d-block flex-shrink-0 me-3">--}}
-{{--                            <span class="avatar-title rounded-circle fs-16 bg-success shadow">--}}
-{{--                                <i class="ri-dribbble-fill"></i>--}}
-{{--                            </span>--}}
-{{--                        </div>--}}
-{{--                        <input type="text" class="form-control" id="dribbleName" placeholder="Username"--}}
-{{--                            value="@dave_adame">--}}
-{{--                    </div>--}}
-{{--                    <div class="d-flex">--}}
-{{--                        <div class="avatar-xs d-block flex-shrink-0 me-3">--}}
-{{--                            <span class="avatar-title rounded-circle fs-16 bg-danger shadow">--}}
-{{--                                <i class="ri-pinterest-fill"></i>--}}
-{{--                            </span>--}}
-{{--                        </div>--}}
-{{--                        <input type="text" class="form-control" id="pinterestName" placeholder="Username"--}}
-{{--                            value="Advance Dave">--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-            <!--end card-->
+
+
         </div>
         <!--end col-->
         <div class="col-xxl-9">
@@ -115,25 +77,25 @@
                         <li class="nav-item">
                             <a class="nav-link active" data-bs-toggle="tab" href="#personalDetails" role="tab">
                                 <i class="fas fa-home"></i>
-                                البيانات الشخصية
+                                @lang('messages.personal_details')
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#changePassword" role="tab">
                                 <i class="far fa-user"></i>
-                               تغيير كلمة المرور
+                                @lang('messages.change_password')
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#experience" role="tab">
                                 <i class="far fa-envelope"></i>
-                               الحجوزات
+                                @lang('messages.reservations')
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#privacy" role="tab">
                                 <i class="far fa-envelope"></i>
-                               المباريات
+                                @lang('messages.matches')
                             </a>
                         </li>
                     </ul>
@@ -141,45 +103,50 @@
                 <div class="card-body p-4">
                     <div class="tab-content">
                         <div class="tab-pane active" id="personalDetails" role="tabpanel">
-                            <form action="javascript:void(0);">
+                            <form id="clientUpdateForm" action="{{ route('admin.client.update', $client->id) }}" method="POST">
+                                @csrf
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="firstnameInput" class="form-label">الاسم الاول
-                                                </label>
-                                            <input type="text" class="form-control" id="firstnameInput"
-                                                placeholder="Enter your firstname" value="{{$client->first_name}}">
+                                            <label for="firstnameInput" class="form-label">
+                                                @lang('messages.first_name')
+                                            </label>
+                                            <input type="text" name="first_name" class="form-control" id="firstnameInput"
+                                                   placeholder="Enter your firstname" value="{{ $client->first_name }}">
                                         </div>
                                     </div>
                                     <!--end col-->
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="lastnameInput" class="form-label">الاسم الاخير
-                                                </label>
-                                            <input type="text" class="form-control" id="lastnameInput"
-                                                placeholder="Enter your lastname" value="{{$client->last_name}}">
+                                            <label for="lastnameInput" class="form-label">
+                                                @lang('messages.last_name')
+                                            </label>
+                                            <input type="text" name="last_name" class="form-control" id="lastnameInput"
+                                                   placeholder="Enter your lastname" value="{{ $client->last_name }}">
                                         </div>
                                     </div>
                                     <!--end col-->
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="phonenumberInput" class="form-label">رقم الجوال
-                                                </label>
-                                            <input type="text" class="form-control" id="phonenumberInput"
-                                                placeholder="Enter your phone number" value="{{$client->phone}}">
+                                            <label for="phonenumberInput" class="form-label">
+                                                @lang('messages.phone')
+                                            </label>
+                                            <input type="text" name="phone" class="form-control" id="phonenumberInput"
+                                                   placeholder="Enter your phone number" value="{{ $client->phone }}">
                                         </div>
                                     </div>
                                     <!--end col-->
 
                                     <div class="col-lg-12">
                                         <div class="hstack gap-2 justify-content-end">
-                                            <button type="submit" class="btn btn-primary">تحديث</button>
+                                            <button type="submit" class="btn btn-primary">@lang('messages.update')</button>
                                         </div>
                                     </div>
                                     <!--end col-->
                                 </div>
                                 <!--end row-->
                             </form>
+
                         </div>
                         <!--end tab-pane-->
                         <div class="tab-pane" id="changePassword" role="tabpanel">
@@ -188,26 +155,23 @@
 
                                     <div class="col-lg-4">
                                         <div>
-                                            <label for="newpasswordInput" class="form-label">New
-                                                Password*</label>
+                                            <label for="newpasswordInput" class="form-label">@lang('messages.new_password')</label>
                                             <input type="password" class="form-control" id="newpasswordInput"
-                                                placeholder="Enter new password">
+                                                   placeholder="@lang('messages.enter_new_password')">
                                         </div>
                                     </div>
                                     <!--end col-->
                                     <div class="col-lg-4">
                                         <div>
-                                            <label for="confirmpasswordInput" class="form-label">Confirm
-                                                Password*</label>
+                                            <label for="confirmpasswordInput" class="form-label">@lang('messages.confirm_password')</label>
                                             <input type="password" class="form-control" id="confirmpasswordInput"
-                                                placeholder="Confirm password">
+                                                placeholder="@lang('messages.confirm_password')">
                                         </div>
                                     </div>
                                     <!--end col-->
                                     <div class="col-lg-12">
                                         <div class="text-end">
-                                            <button type="submit" class="btn btn-success">Change
-                                                Password</button>
+                                            <button type="submit" class="btn btn-success">@lang('messages.change_password')</button>
                                         </div>
                                     </div>
                                     <!--end col-->
@@ -496,8 +460,8 @@
                                         <h5 class="modal-title" id="exampleModalLabel"></h5>
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
                                     </div>
-                                    <form class="tablelist-form" autocomplete="off">
-                                        <div class="modal-body">
+                                    <form id="completionForm" class="tablelist-form" method="POST" action="{{ route('admin.clients.updateMissingData') }}" autocomplete="off">
+                                         <div class="modal-body">
                                             <input type="hidden" id="id-field" />
 
                                             <div class="mb-3" id="modal-id" style="display: none;">
@@ -505,57 +469,50 @@
                                                 <input type="text" id="id-field1" class="form-control" placeholder="ID" readonly />
                                             </div>
 
-                                            <div class="mb-3">
-                                                <label for="customername-field" class="form-label">اسم العميل</label>
-                                                <input type="text" id="customername-field" class="form-control" placeholder="أدخل الاسم"  />
-                                                <div class="invalid-feedback">أدخل اسم العميل.</div>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label for="email-field" class="form-label">البريد الالكتروني</label>
-                                                <input type="email" id="email-field" class="form-control" placeholder="ادخل البريد الالكتروني"  />
-                                                <div class="invalid-feedback">ادخل البريد الالكتروني</div>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label for="phone-field" class="form-label">رقم الجوال</label>
-                                                <div class="input-group" data-input-flag>
-                                                    <button class="btn btn-light border" type="button" data-bs-toggle="dropdown" aria-expanded="false"><img src="{{URL::asset('build/images/flags/sa.svg')}}" alt="flag img" height="20" class="country-flagimg rounded"><span class="ms-2 country-codeno">+ 966</span></button>
-                                                    <input type="text" class="form-control rounded-end flag-input" value="" placeholder="ادخل رقم الجوال" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" id="phone-field" />
-                                                    <div class="dropdown-menu w-100">
-                                                        <ul class="list-unstyled dropdown-menu-list mb-0"></ul>
-                                                    </div>
-                                                </div>
-                                                <div class="invalid-feedback">من فضلك ادخل رقم الجوال.</div>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label for="date-field" class="form-label">كلمة المرور</label>
-                                                <div class="position-relative auth-pass-inputgroup mb-3">
-                                                    <input type="password" class="form-control pe-5 password-input @error('password') is-invalid @enderror" name="password" placeholder="@lang('translation.EnterPassword')" id="password-input" >
-                                                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
-                                                    @error('password')
-                                                    <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                    @enderror
-                                                </div>
-                                                <div class="invalid-feedback">من فضلك ادخل كلمة المرور.</div>
-                                            </div>
-
-                                            <div>
-                                                <label for="status-field" class="form-label">حالة الحساب</label>
-                                                <select class="form-control" data-choices data-choices-search-false name="status-field" id="status-field" >
-                                                    <option value="">الحالة</option>
-                                                    <option value="1" >نشط</option>
-                                                    <option value="0">غير نشط</option>
+                                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                                <label for="customername-field" class="form-label">@lang('messages.level')</label>
+                                                <select class="form-select" id="level" name="level" required>
+                                                    <option value="" disabled selected>@lang('messages.choose_level')</option>
+                                                    <option value="Junior">@lang('messages.junior')</option>
+                                                    <option value="Middle">@lang('messages.middle')</option>
+                                                    <option value="Advanced">@lang('messages.advanced')</option>
                                                 </select>
                                             </div>
+
+                                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                                <label for="email-field" class="form-label"> @lang('messages.age')</label>
+                                                <select class="form-select" id="age" name="age" required>
+                                                    <option value="" disabled selected>@lang('messages.choose_age')</option>
+                                                    <option value="18-30">@lang('messages.age_18_30')</option>
+                                                    <option value="30-40">@lang('messages.age_30_40')</option>
+                                                    <option value="40-50">@lang('messages.age_40_50')</option>
+                                                    <option value="50+">@lang('messages.age_50_plus')</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                                <label for="phone-field" class="form-label">@lang('messages.gender')</label>
+                                                <select class="form-select" id="gender" name="gender" required>
+                                                    <option value="" disabled selected>@lang('messages.choose_gender')</option>
+                                                    <option value="male">@lang('messages.male')</option>
+                                                    <option value="female">@lang('messages.female')</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                                <label for="date-field" class="form-label">@lang('messages.sport_type')</label>
+                                                <select class="form-select" id="sport_type" name="sport_type" required>
+                                                    <option value="" disabled selected>@lang('messages.choose_sport_type')</option>
+                                                    <option value="Tennis">@lang('messages.tennis')</option>
+                                                    <option value="Padel">@lang('messages.padel')</option>
+                                                </select>
+                                            </div>
+
                                         </div>
-                                        <div class="modal-footer">
+                                        <div class="modal-footer" style="font-family: 'Tajawal', sans-serif;">
                                             <div class="hstack gap-2 justify-content-end">
-                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">الغاء</button>
-                                                <button type="submit" class="btn btn-primary" id="add-btn">Add Customer</button>
+                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">@lang('messages.cancel')</button>
+                                                <button type="submit" class="btn btn-primary" id="add-btn">@lang('messages.save')</button>
                                                 <!-- <button type="button" class="btn btn-success" id="edit-btn">Update</button> -->
                                             </div>
                                         </div>
@@ -577,4 +534,40 @@
 @section('script')
     <script src="{{ URL::asset('build/js/pages/profile-setting.init.js') }}"></script>
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
+    <script>
+        document.getElementById('completionForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // منع الإرسال العادي
+
+            let form = this;
+            let formData = new FormData(form);
+
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // إغلاق المودال
+                        var myModal = new bootstrap.Modal(document.getElementById('showModal'));
+                        myModal.hide();
+
+                        // تحديث النص إلى "الحساب مكتمل"
+                        document.querySelector('.card-title').textContent = "@lang('messages.account_completed')";
+
+                        // تحديث شريط التقدم
+                        document.querySelector('.progress-bar').style.width = '100%';
+                        document.querySelector('.progress-bar').classList.remove('bg-danger');
+                        document.querySelector('.progress-bar').classList.add('bg-success');
+                        document.querySelector('.label').textContent = '100%';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+
 @endsection

@@ -22,11 +22,9 @@
                         <div class="col-sm-auto">
                             <div class="d-flex flex-wrap align-items-start gap-2">
                                 <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
-                                <button type="button" class="btn btn-secondary add-btnt" onclick="window.location.href='/admin/playgrounds/create'">
-                                    <i class="ri-add-line align-bottom me-1"></i>@lang('messages.add_service')</button>
-
-                                {{--                            <button type="button" class="btn btn-info"><i class="ri-file-download-line align-bottom me-1"></i>--}}
-                                {{--                                Import</button>--}}
+                                <button type="button" class="btn btn-secondary add-btnt" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+                                    <i class="ri-add-line align-bottom me-1"></i>@lang('messages.add_service')
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -126,7 +124,91 @@
 
         </div>
         <!--end col-->
+
+        <!--start edit Service Modal-->
+        <div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="editServiceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="font-family: 'Tajawal', sans-serif;">
+                        <h5 class="modal-title" id="editServiceModalLabel">@lang('messages.updata_services')</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editServiceForm" action="{{ route('admin.services.update', 'id') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" id="serviceId" name="id">
+                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <label for="name_ar" class="form-label">@lang('messages.name_ar')</label>
+                                <input type="text" class="form-control" id="name_ar" name="name_ar"  required>
+                            </div>
+                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <label for="name_en" class="form-label">@lang('messages.name_en')</label>
+                                <input type="text" class="form-control" id="name_en" name="name_en" required>
+                            </div>
+                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <label for="media_id" class="form-label">@lang('messages.service_image')</label>
+                                <input type="file" class="form-control" id="media_id" name="media_id" accept="image/*">
+                            </div>
+                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <label for="is_active" class="form-label">@lang('messages.status')</label>
+                                <select class="form-select" id="is_active" name="is_active">
+                                    <option value="" disabled selected>@lang('messages.choose_status')</option>
+                                    <option value="1">@lang('messages.active')</option>
+                                    <option value="0">@lang('messages.inactive')</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">@lang('messages.save')</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end edit Service Modal-->
+
+        <!--start add Service Modal-->
+        <div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addServiceModalLabel">@lang('messages.add_service')</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/admin/services" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="name_ar" class="form-label">@lang('messages.name_ar')</label>
+                                <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="name_en" class="form-label">@lang('messages.name_en')</label>
+                                <input type="text" class="form-control" id="name_en" name="name_en" required>
+                            </div>
+                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <label for="media_id" class="form-label">@lang('messages.service_image')</label>
+                                <input type="file" class="form-control" id="media_id" name="media_id" accept="image/*">
+                            </div>
+                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <label for="is_active" class="form-label">@lang('messages.status')</label>
+                                <select class="form-select" id="is_active" name="is_active">
+                                    <option value="" disabled selected>@lang('messages.choose_status')</option>
+                                    <option value="1">@lang('messages.active')</option>
+                                    <option value="0">@lang('messages.inactive')</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@lang('messages.cancel')</button>
+                            <button type="submit" class="btn btn-primary">@lang('messages.save')</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--end add Service Modal-->
     </div>
+
     <!--end row-->
 @endsection
 @section('script')
@@ -142,7 +224,6 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ar.js"></script>
-
     <script src="{{ URL::asset('build/js/admin/services.js') }}"></script>
     <script src="{{ URL::asset('build/libs/multi.js/multi.min.js') }}"></script>
 
@@ -153,7 +234,30 @@
         };
     </script>
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+            $(document).ready(function() {
+            $('.edit-item-btn').on('click', function() {
+                var serviceId = $(this).data('id');
+                var form = $('#editServiceForm');
+                form.attr('action', form.attr('action').replace('id', serviceId));
 
+                // إجراء Ajax لتحميل بيانات الخدمة
+                $.ajax({
+                    url: '/admin/services/' + serviceId + '/edit',
+                    method: 'GET',
+                    success: function(response) {
+                        // قم بتحديث الحقول في المودال بالقيم الحالية
+                        $('#name_ar').val(response.name_ar);
+                        // قم بتحديث الحقول الأخرى كما هو مطلوب
+                    },
+                    error: function(xhr) {
+                        console.error('Error loading service data:', xhr);
+                    }
+                });
+            });
+        });
+    </script>
 
 @endsection
 

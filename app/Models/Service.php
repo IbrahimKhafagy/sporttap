@@ -10,10 +10,7 @@ class Service extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name_ar',
-        'name_en',
-        'media_id',
-        'is_active',
+        'name_ar', 'name_en', 'media_id', 'is_active',
     ];
 
     public function media()

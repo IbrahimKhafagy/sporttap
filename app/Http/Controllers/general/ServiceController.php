@@ -7,6 +7,8 @@ use App\Http\Resources\ServiceResource;
 use App\Models\Media;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
@@ -49,7 +51,7 @@ class ServiceController extends Controller
                 $media = Media::find($service->media_id);
                 if ($media) {
                     $filePath = "storage/{$service->media_id}/{$media->file_name}";
-                    $service->image= asset("{$filePath}");
+                    $service->image= asset((string)($filePath));
 
                 }
             }
@@ -60,35 +62,69 @@ class ServiceController extends Controller
             $services
         );
     }
-    public function store(Request $request)
+    public function edit($id)
     {
-        $validator = Validator::make($request->all(), [
-            'name_ar' => 'required|string',
-            'name_en' => 'required|string',
-            'media_id' => 'nullable|exists:media,id',
+        $service = Service::findOrFail($id);
+        return response()->json($service);
+    }
+
+
+
+
+    // في ملف التعديل (مثل: UpdateServiceController.php)
+    public function update(Request $request, Service $service)
+    {
+        $validatedData = $request->validate([
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'media_id' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'nullable|boolean',
         ]);
-        $response = [
-            'status' => 401,
-            'msg' => "",
-            'data' => null
-        ];
-        if ($validator->fails()) {
-            $firstError = $validator->errors()->first();
-            $response['msg'] = $firstError;
-            return response()->json($response);
+
+        // إذا تم رفع صورة جديدة
+        if ($request->hasFile('media_id')) {
+            // حذف الصورة القديمة إذا كانت موجودة
+            if ($service->media_id && Storage::disk('public')->exists($service->media_id)) {
+                Storage::disk('public')->delete($service->media_id);
+            }
+
+            // حفظ الصورة الجديدة
+            $path = $request->file('media_id')->store('services', 'public');
+            $validatedData['media_id'] = $path;
         }
 
+        $service->update($validatedData);
 
-        $service = Service::create([
-            'name_ar' => $request->input('name_ar'),
-            'name_en' => $request->input('name_en'),
-            'media_id' => $request->input('media_id'),
-            'is_active' => $request->input('is_active', true),
+        return redirect()->route('admin.services.index')->with('success', 'Service updated successfully!');
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'media_id' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        return response()->json(['service' => $service], 201);
+        // إنشاء الخدمة الجديدة
+        $service = Service::create($validatedData);
+
+        if ($request->hasFile('media_id')) {
+            // حفظ الملف و الحصول على المسار
+            $path = $request->file('media_id')->store('services', 'public');
+
+            // تحديث حقل media_path في جدول services
+            $service->update(['media_path' => $path]);
+        }
+
+        // إذا كنت ترغب في معالجة مجموعة من الخدمات، يجب أن يتم ذلك بشكل منفصل
+        // (هذا ليس عادةً ما يتم في طريقة `store`، لكن سأوفر مثالاً على ذلك إذا لزم الأمر)
+
+        return redirect()->route('admin.services.index')->with('success', 'Service added successfully!');
     }
+
+
 
     public function getActiveServices()
     {

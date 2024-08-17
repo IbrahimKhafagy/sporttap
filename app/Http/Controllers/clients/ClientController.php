@@ -4,7 +4,9 @@ namespace App\Http\Controllers\clients;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
@@ -63,27 +65,58 @@ class ClientController extends Controller
             $clients
         );
     }
+
+    public function updateMissingData(Request $request)
+    {
+        try {
+            $request->validate([
+                'level' => 'required',
+                'age' => 'required',
+                'gender' => 'required',
+                'sport_type' => 'required',
+            ]);
+
+            // تحديث البيانات المفقودة
+            $clients = User::user();
+            $clients->level = $request->input('level');
+            $clients->age = $request->input('age');
+            $clients->gender = $request->input('gender');
+            $clients->sport_type = $request->input('sport_type');
+            $clients->save();
+
+            return response()->json(['success' => true, 'message' => __('messages.data_updated')]);
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['success' => false, 'message' => __('messages.error_occurred')], 500);
+        }
+    }
+
+
+
     public function store(Request $request)
     {
-
-
-        $validatedData = $request->validate([
+        // التحقق من صحة البيانات الواردة
+        $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
-            'sport_type' => 'required|string|max:50',
-            'gender' => 'required|string|max:10',
-            'level' => 'required|string|max:50',
-            'check' => 'nullable|boolean',
-            'age' => 'required|integer',
+            'phone' => 'required|string|max:20|unique:users,phone',
+            'sport_type' => 'nullable|string|max:50',
+            'gender' => 'nullable|string|max:10',
+            'level' => 'nullable|string|max:50',
+            'age' => 'nullable|string|min:1',
             'is_active' => 'nullable|boolean',
         ]);
 
-        // dd($validatedData);
-        User::create($validatedData);
+        // إنشاء مستخدم جديد باستخدام البيانات التي تم التحقق من صحتها
+        $user = User::create($validated);
 
-        return redirect()->route('clients.index')->with('success', 'تمت إضافة العميل بنجاح!');
+        // توجيه المستخدم إلى صفحة أخرى بعد الإضافة بنجاح
+        return redirect('/admin/clients')->with('success', __('messages.client_added_successfully'));
     }
+
+
+
 
 
 
@@ -97,24 +130,25 @@ class ClientController extends Controller
 
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-
-        $validatedData = $request->validate([
-            'first_name' => 'sometimes|required|string|max:255',
-            'last_name' => 'sometimes|required|string|max:255',
-            'phone' => 'sometimes|required|string|max:15',
-            'sport_type' => 'sometimes|required|string|max:50',
-            'gender' => 'sometimes|required|string|max:10',
-            'level' => 'sometimes|required|string|max:50',
-            'check' => 'sometimes|required|boolean',
-            'age' => 'sometimes|required|integer',
-            'is_active' => 'sometimes|required|boolean',
+        // التحقق من صحة البيانات المدخلة
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
         ]);
 
-        $user->update($validatedData);
+        // العثور على العميل وتحديث بياناته
+        $client = User::findOrFail($id);
+        $client->first_name = $request->input('first_name');
+        $client->last_name = $request->input('last_name');
+        $client->phone = $request->input('phone');
+        $client->save();
 
-        return response()->json($user, 200);
+        // إعادة توجيه أو عرض رسالة نجاح
+        return redirect()->back()->with('success', 'Client updated successfully');
     }
+
+
 
 
     public function destroy($id)
@@ -123,6 +157,11 @@ class ClientController extends Controller
         $user->delete();
 
         return response()->json(null, 204);
+    }
+    public function reservations(Client $client)
+    {
+        $reservations = $client->reservations; // Assuming a relationship is defined
+        return view('admin.reservations.index', compact('client', 'reservations'));
     }
 }
 
