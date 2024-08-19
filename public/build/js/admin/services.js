@@ -98,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function() {
         var tableBody = document.getElementById('tableBody');
         tableBody.innerHTML = '';
         users.forEach(user => {
-            user.is_active = undefined;
             user.age = undefined;
             user.gender = undefined;
             user.sport_type = undefined;
@@ -120,18 +119,27 @@ document.addEventListener("DOMContentLoaded", function() {
                     </td>
             <td class="first_name">${user.name_ar}</td>
             <td class="last_name">${user.name_en}</td>
-<td class="date">${formatDate(user.created_at,userLanguage)}</td>
+            <td class="date">${formatDate(user.created_at,userLanguage)}</td>
                 <td class="status" >${isStatus(user.is_active)}</td>
             <td>
-               <ul class="list-inline hstack gap-2 mb-0">
-    <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-        <a href="javascript:void(0);" class="text-primary d-inline-block edit-item-btn" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-id="{{ $service->id }}">
-            <i class="ri-pencil-fill fs-16"></i>
-        </a>
-    </li>
-</ul>
+    <ul class="list-inline hstack gap-2 mb-0">
+        <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+            <a href="javascript:void(0);"
+               class="text-primary d-inline-block edit-item-btn"
+               data-bs-toggle="modal"
+               data-bs-target="#editServiceModal"
+               data-id="${user.id}"
+               data-name_ar="${user.name_ar}"
+               data-name_en="${user.name_en}"
+               data-is_active="${user.is_active}"
+               data-media_id="${user.media_id}">
+                <i class="ri-pencil-fill fs-16"></i>
+            </a>
+        </li>
+    </ul>
+</td>
 
-            </td>
+
         `;
             tableBody.appendChild(row);
         });
@@ -223,10 +231,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to determine status
     function isStatus(val) {
-        return val
+        return val === 1 || val === true
             ? '<span class="badge bg-success-subtle text-success text-uppercase">' + (userLanguage === "en" ? 'Active' : 'نشط') + '</span>'
             : '<span class="badge bg-danger-subtle text-danger text-uppercase">' + (userLanguage === "en" ? 'Inactive' : 'غير نشط') + '</span>';
     }
+
 
     function formatDate(dateString, locale) {
         const options = { day: '2-digit', month: 'short', year: 'numeric' };

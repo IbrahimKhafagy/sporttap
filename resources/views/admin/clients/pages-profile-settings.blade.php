@@ -2,6 +2,9 @@
 @section('title')
     @lang('messages.profile')
 @endsection
+@section('css')
+    <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+@endsection
 @section('content')
     <div class="position-relative mx-n4 mt-n4" style="height: 100px;">
         <div class="profile-wid-bg profile-setting-img" style="height: 100px;">
@@ -81,12 +84,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#changePassword" role="tab">
-                                <i class="far fa-user"></i>
-                                @lang('messages.change_password')
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#experience" role="tab">
                                 <i class="far fa-envelope"></i>
                                 @lang('messages.reservations')
@@ -111,6 +108,8 @@
                                             <label for="firstnameInput" class="form-label">
                                                 @lang('messages.first_name')
                                             </label>
+                                            <input type="text" id="id-client" class="form-control" placeholder="ID" value="{{ $client->id }}" hidden />
+
                                             <input type="text" name="first_name" class="form-control" id="firstnameInput"
                                                    placeholder="Enter your firstname" value="{{ $client->first_name }}">
                                         </div>
@@ -136,42 +135,21 @@
                                         </div>
                                     </div>
                                     <!--end col-->
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="is_active" class="form-label">@lang('messages.status')</label>
+                                            <select class="form-select" id="is_active" name="is_active" style="font-family: 'Tajawal', sans-serif;">
+                                                <option value="" disabled>@lang('messages.choose_status')</option>
+                                                <option value="1" {{ $client->is_active == 1 ? 'selected' : '' }}>@lang('messages.active')</option>
+                                                <option value="0" {{ $client->is_active == 0 ? 'selected' : '' }}>@lang('messages.inactive')</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
 
                                     <div class="col-lg-12">
                                         <div class="hstack gap-2 justify-content-end">
                                             <button type="submit" class="btn btn-primary">@lang('messages.update')</button>
-                                        </div>
-                                    </div>
-                                    <!--end col-->
-                                </div>
-                                <!--end row-->
-                            </form>
-
-                        </div>
-                        <!--end tab-pane-->
-                        <div class="tab-pane" id="changePassword" role="tabpanel">
-                            <form action="javascript:void(0);">
-                                <div class="row g-2">
-
-                                    <div class="col-lg-4">
-                                        <div>
-                                            <label for="newpasswordInput" class="form-label">@lang('messages.new_password')</label>
-                                            <input type="password" class="form-control" id="newpasswordInput"
-                                                   placeholder="@lang('messages.enter_new_password')">
-                                        </div>
-                                    </div>
-                                    <!--end col-->
-                                    <div class="col-lg-4">
-                                        <div>
-                                            <label for="confirmpasswordInput" class="form-label">@lang('messages.confirm_password')</label>
-                                            <input type="password" class="form-control" id="confirmpasswordInput"
-                                                placeholder="@lang('messages.confirm_password')">
-                                        </div>
-                                    </div>
-                                    <!--end col-->
-                                    <div class="col-lg-12">
-                                        <div class="text-end">
-                                            <button type="submit" class="btn btn-success">@lang('messages.change_password')</button>
                                         </div>
                                     </div>
                                     <!--end col-->
@@ -459,9 +437,9 @@
                                     <div class="modal-header bg-light p-3">
                                         <h5 class="modal-title" id="exampleModalLabel"></h5>
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
-                                    </div>
-                                    <form id="completionForm" class="tablelist-form" method="POST" action="{{ route('admin.clients.updateMissingData') }}" autocomplete="off">
-                                         <div class="modal-body">
+                                    </div>\                            <form class="tablelist-form" autocomplete="off">
+
+                                    <div class="modal-body">
                                             <input type="hidden" id="id-field" />
 
                                             <div class="mb-3" id="modal-id" style="display: none;">
@@ -473,9 +451,9 @@
                                                 <label for="customername-field" class="form-label">@lang('messages.level')</label>
                                                 <select class="form-select" id="level" name="level" required>
                                                     <option value="" disabled selected>@lang('messages.choose_level')</option>
-                                                    <option value="Junior">@lang('messages.junior')</option>
-                                                    <option value="Middle">@lang('messages.middle')</option>
-                                                    <option value="Advanced">@lang('messages.advanced')</option>
+                                                    <option value="junior">@lang('messages.junior')</option>
+                                                    <option value="middle">@lang('messages.middle')</option>
+                                                    <option value="advanced">@lang('messages.advanced')</option>
                                                 </select>
                                             </div>
 
@@ -532,42 +510,10 @@
     <!--end row-->
 @endsection
 @section('script')
-    <script src="{{ URL::asset('build/js/pages/profile-setting.init.js') }}"></script>
+    <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    <script src="{{ URL::asset('build/js/admin/profile-setting.init.js') }}"></script>
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
-    <script>
-        document.getElementById('completionForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // منع الإرسال العادي
 
-            let form = this;
-            let formData = new FormData(form);
-
-            fetch(form.action, {
-                method: form.method,
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // إغلاق المودال
-                        var myModal = new bootstrap.Modal(document.getElementById('showModal'));
-                        myModal.hide();
-
-                        // تحديث النص إلى "الحساب مكتمل"
-                        document.querySelector('.card-title').textContent = "@lang('messages.account_completed')";
-
-                        // تحديث شريط التقدم
-                        document.querySelector('.progress-bar').style.width = '100%';
-                        document.querySelector('.progress-bar').classList.remove('bg-danger');
-                        document.querySelector('.progress-bar').classList.add('bg-success');
-                        document.querySelector('.label').textContent = '100%';
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
-    </script>
 
 @endsection

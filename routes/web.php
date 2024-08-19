@@ -54,7 +54,6 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
 
             Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
             Route::get('/clients/{id}', [ClientController::class, 'show']);
-            Route::post('/clients/update-missing-data', [ClientController::class, 'updateMissingData'])->name('clients.updateMissingData');
             Route::get('/clients/create', [ClientController::class, 'create']);
             Route::post('/clients/store', [ClientController::class, 'store'])->name('clients.store');
             Route::post('/client/update/{id}', [ClientController::class, 'update'])->name('client.update');

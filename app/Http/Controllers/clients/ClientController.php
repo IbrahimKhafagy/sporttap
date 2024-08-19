@@ -7,6 +7,7 @@ use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ClientController extends Controller
 {
@@ -66,30 +67,46 @@ class ClientController extends Controller
         );
     }
 
-    public function updateMissingData(Request $request)
+    public function updateMissingData(Request $request,$id)
     {
-        try {
-            $request->validate([
-                'level' => 'required',
-                'age' => 'required',
-                'gender' => 'required',
-                'sport_type' => 'required',
-            ]);
+        $validator = Validator::make($request->all(), [
+            'country_code' => 'nullable|string',
+            'sport_type' => 'nullable|in:Tennis,Padel',
+            'gender' => 'nullable|in:male,female',
+            'level' => 'nullable|in:junior,middle,advanced',
+            'check' => 'nullable|string',
+            'age' => 'nullable|string',
+            'is_active' => 'nullable|boolean',
+        ]);
 
-            // تحديث البيانات المفقودة
-            $clients = User::user();
-            $clients->level = $request->input('level');
-            $clients->age = $request->input('age');
-            $clients->gender = $request->input('gender');
-            $clients->sport_type = $request->input('sport_type');
-            $clients->save();
+        if ($validator->fails()) {
+            $firstError = $validator->errors()->first();
+            return $this->errorResponse( $firstError, 401);
+
+        }
+
+        $validatedData = $request->validate([
+            'first_name' => 'nullable|string',
+            'last_name' => 'nullable|string',
+            'sport_type' => 'nullable|in:Tennis,Padel',
+            'gender' => 'nullable|in:male,female',
+            'level' => 'nullable|in:junior,middle,advanced',
+            'check' => 'nullable|string',
+            'age' => 'nullable|string',
+            'is_active' => 'nullable|boolean',
+            // Add validation rules for other fields if needed
+        ]);
+        $user = User::where('id', $id)->first();
+
+        // Fill the user model with validated data
+        $user->fill($validatedData);
+
+        // Save the user
+        $user->save();
 
             return response()->json(['success' => true, 'message' => __('messages.data_updated')]);
 
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json(['success' => false, 'message' => __('messages.error_occurred')], 500);
-        }
+
     }
 
 
@@ -135,6 +152,7 @@ class ClientController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
+            'is_active' => 'nullable|boolean',
         ]);
 
         // العثور على العميل وتحديث بياناته
@@ -142,6 +160,7 @@ class ClientController extends Controller
         $client->first_name = $request->input('first_name');
         $client->last_name = $request->input('last_name');
         $client->phone = $request->input('phone');
+        $client->is_active= $request->input('is_active');
         $client->save();
 
         // إعادة توجيه أو عرض رسالة نجاح

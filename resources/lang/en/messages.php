@@ -117,6 +117,7 @@ return [
     'actions' => 'Actions',
     'no_results' => 'Sorry! No results found',
     'search_message' => 'We have searched through more than :total playgrounds and did not find any that match your search.',
+    'search_of_client'=>'We have searched through more than :total client and did not find any that match your search.',
     'previous' => 'Previous',
     'next' => 'Next',
     'field_label_ar' => 'Playground Name in Arabic',
@@ -149,7 +150,7 @@ return [
     'field_owners' => 'Field Owners',
     'field_settings' => 'Field Settings',
     'personal_details' => 'Personal Details',
-    'profile'=>'Profile',
+    'profile'=>'Personal account',
     'change_password' => 'Change Password',
     'complete_account' => 'Complete Account',
     'new_password' => 'New Password',
@@ -166,7 +167,8 @@ return [
     'tennis'=>'Tennis',
     'padel'=>'Padel',
     'cancel'=>'Cancel',
+    'update_services'=>'Service Update ',
     'choose_status'=>'choose status',
     'service_image' => 'Service Image',
-
+    'data_updated'=>'Data is updated',
 ];

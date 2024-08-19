@@ -130,7 +130,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header" style="font-family: 'Tajawal', sans-serif;">
-                        <h5 class="modal-title" id="editServiceModalLabel">@lang('messages.updata_services')</h5>
+                        <h5 class="modal-title" id="editServiceModalLabel">@lang('messages.update_services')</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -140,7 +140,7 @@
                             <input type="hidden" id="serviceId" name="id">
                             <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
                                 <label for="name_ar" class="form-label">@lang('messages.name_ar')</label>
-                                <input type="text" class="form-control" id="name_ar" name="name_ar"  required>
+                                <input type="text" class="form-control" id="name_ar" name="name_ar" required>
                             </div>
                             <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
                                 <label for="name_en" class="form-label">@lang('messages.name_en')</label>
@@ -150,10 +150,10 @@
                                 <label for="media_id" class="form-label">@lang('messages.service_image')</label>
                                 <input type="file" class="form-control" id="media_id" name="media_id" accept="image/*">
                             </div>
+
                             <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
                                 <label for="is_active" class="form-label">@lang('messages.status')</label>
                                 <select class="form-select" id="is_active" name="is_active">
-                                    <option value="" disabled selected>@lang('messages.choose_status')</option>
                                     <option value="1">@lang('messages.active')</option>
                                     <option value="0">@lang('messages.inactive')</option>
                                 </select>
@@ -187,8 +187,9 @@
                             </div>
                             <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
                                 <label for="media_id" class="form-label">@lang('messages.service_image')</label>
-                                <input type="file" class="form-control" id="media_id" name="media_id" accept="image/*">
+                                <input type="file" class="form-control" id="media_id" name="image" accept="image/*">
                             </div>
+
                             <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
                                 <label for="is_active" class="form-label">@lang('messages.status')</label>
                                 <select class="form-select" id="is_active" name="is_active">
@@ -197,6 +198,7 @@
                                     <option value="0">@lang('messages.inactive')</option>
                                 </select>
                             </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@lang('messages.cancel')</button>
@@ -236,25 +238,30 @@
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-            $(document).ready(function() {
-            $('.edit-item-btn').on('click', function() {
-                var serviceId = $(this).data('id');
-                var form = $('#editServiceForm');
-                form.attr('action', form.attr('action').replace('id', serviceId));
+        document.addEventListener('DOMContentLoaded', function() {
+            var editServiceModal = document.getElementById('editServiceModal');
+            editServiceModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
 
-                // إجراء Ajax لتحميل بيانات الخدمة
-                $.ajax({
-                    url: '/admin/services/' + serviceId + '/edit',
-                    method: 'GET',
-                    success: function(response) {
-                        // قم بتحديث الحقول في المودال بالقيم الحالية
-                        $('#name_ar').val(response.name_ar);
-                        // قم بتحديث الحقول الأخرى كما هو مطلوب
-                    },
-                    error: function(xhr) {
-                        console.error('Error loading service data:', xhr);
-                    }
-                });
+                // جلب البيانات من الـ<a>
+                var serviceId = button.getAttribute('data-id');
+                var nameAr = button.getAttribute('data-name_ar');
+                var nameEn = button.getAttribute('data-name_en');
+                var isActive = button.getAttribute('data-is_active');
+                var mediaId = button.getAttribute('data-media_id');
+
+                var modal = this;
+                modal.querySelector('#serviceId').value = serviceId;
+                modal.querySelector('#name_ar').value = nameAr;
+                modal.querySelector('#name_en').value = nameEn;
+                modal.querySelector('#is_active').value = isActive;
+                modal.querySelector('#media_id').value = mediaId;
+            });
+
+            document.getElementById('editServiceForm').addEventListener('submit', function(e) {
+                var form = this;
+                var serviceId = document.getElementById('serviceId').value;
+                form.action = form.action.replace('id', serviceId);
             });
         });
     </script>

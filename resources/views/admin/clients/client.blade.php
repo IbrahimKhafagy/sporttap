@@ -111,7 +111,7 @@
                                     </lord-icon>
                                     <h5 class="mt-2">@lang('messages.no_results')</h5>
                                     <p class="text-muted mb-0">
-                                        @lang('messages.search_message', ['total' => $clients->total()])
+                                        @lang('messages.search_of_client', ['total' => $clients->total()])
                                     </p>
                                 </div>
                             </div>

@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ServiceResource;
 use App\Models\Media;
 use App\Models\Service;
+use App\Models\TempMedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
@@ -62,42 +62,59 @@ class ServiceController extends Controller
             $services
         );
     }
-    public function edit($id)
+    public function edit(Service $service)
     {
-        $service = Service::findOrFail($id);
-        return response()->json($service);
+        return response()->json([
+            'id' => $service->id,
+            'name_ar' => $service->name_ar,
+            'name_en' => $service->name_en,
+            'media_id' => $service->media_id,
+            'is_active' => $service->is_active,
+        ]);
     }
 
-
-
-
-    // في ملف التعديل (مثل: UpdateServiceController.php)
-    public function update(Request $request, Service $service)
+    public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        // التحقق من صحة البيانات
+        $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'media_id' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'nullable|boolean',
         ]);
 
-        // إذا تم رفع صورة جديدة
-        if ($request->hasFile('media_id')) {
-            // حذف الصورة القديمة إذا كانت موجودة
-            if ($service->media_id && Storage::disk('public')->exists($service->media_id)) {
-                Storage::disk('public')->delete($service->media_id);
-            }
+        // العثور على الخدمة باستخدام المعرف
+        $service = Service::find($id);
 
-            // حفظ الصورة الجديدة
-            $path = $request->file('media_id')->store('services', 'public');
-            $validatedData['media_id'] = $path;
+        // التحقق من وجود الخدمة
+        if (!$service) {
+            return redirect()->route('admin.services.index')->with('error', 'Service not found!');
         }
 
-        $service->update($validatedData);
+        // إذا كان هناك ملف صورة تم تحميله
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $fileName = $file->getClientOriginalName();
 
+            // البحث عن نموذج TempMedia أو إنشائه إذا لم يكن موجودًا
+            $tempMedia = TempMedia::firstOrCreate(['name' => $fileName]);
+
+            // تخزين الملف في مجموعة الوسائط
+            $media = $tempMedia->addMedia($file)->toMediaCollection('images');
+
+            // تحديث النموذج بالمعرف الجديد للوسائط
+            $service->media_id = $media->id;
+        }
+
+        // تحديث بيانات النموذج
+        $service->name_ar = $request->input('name_ar');
+        $service->name_en = $request->input('name_en');
+        $service->is_active = $request->input('is_active', false);
+        $service->save();
+
+        // إرجاع استجابة بنجاح
         return redirect()->route('admin.services.index')->with('success', 'Service updated successfully!');
     }
-
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -107,19 +124,21 @@ class ServiceController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
-        // إنشاء الخدمة الجديدة
         $service = Service::create($validatedData);
 
-        if ($request->hasFile('media_id')) {
-            // حفظ الملف و الحصول على المسار
-            $path = $request->file('media_id')->store('services', 'public');
+        if ($request->hasFile('image')) {
+            $file= $request->file("image");
 
-            // تحديث حقل media_path في جدول services
-            $service->update(['media_path' => $path]);
+            $fileName = $file->getClientOriginalName();
+            // Find or create an instance of TempMedia
+            $yourModel = TempMedia::firstOrCreate(['name' => $fileName]);
+            // Store the uploaded file in the 'images' collection
+            $media = $yourModel->addMedia($file)->toMediaCollection('images');
+            // Collect the media ID
+            $service->update(['media_id' => $media->id]);
+
         }
 
-        // إذا كنت ترغب في معالجة مجموعة من الخدمات، يجب أن يتم ذلك بشكل منفصل
-        // (هذا ليس عادةً ما يتم في طريقة `store`، لكن سأوفر مثالاً على ذلك إذا لزم الأمر)
 
         return redirect()->route('admin.services.index')->with('success', 'Service added successfully!');
     }

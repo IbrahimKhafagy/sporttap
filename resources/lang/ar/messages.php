@@ -115,7 +115,8 @@ return [
     'creation_date' => 'تاريخ الانشاء',
     'actions' => 'اجراءات',
     'no_results' => 'عذرا! لم يتم العثور على أي نتائج',
-    'search_message' => 'لقد قمنا بالبحث في أكثر من :total ملعب، ولم نجد أي ملاعب يتناسبون مع بحثك.',
+    'search_message' => 'لقد قمنا بالبحث في أكثر من :total ملعب، ولم نجد أي تشابه  يتناسب مع بحثك.',
+    'search_of_client' => 'لقد قمنا بالبحث في أكثر من :total عميل، ولم نجد أي تشابه  يتناسب مع بحثك.',
     'previous' => 'السابق',
     'next' => 'التالي',
     'field_label_ar' => 'اسم الملعب بالعربي',
@@ -148,7 +149,7 @@ return [
     'field_owners' => 'اصحاب الملاعب',
     'field_settings' => 'اعدادات الملاعب',
     'personal_details' => 'البيانات الشخصية',
-    'profile'=>'البروفيل',
+    'profile'=>'الحساب الشخصى',
     'change_password' => 'تغيير كلمة المرور',
     'complete_account' => 'استكمال الحساب',
     'new_password' => 'كلمة المرور الجديدة',
@@ -166,7 +167,7 @@ return [
     'padel'=>'بادل',
     'cancel'=>'الغاء',
     'choose_status'=>'اختر الحالة',
-    'updata_services'=>'تعديل الخدمة',
+    'update_services'=>'تعديل الخدمة',
     'service_image' => 'صورة الخدمة',
-
+    'data_updated'=>'تم تعديل البيانات',
 ];
