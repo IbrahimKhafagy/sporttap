@@ -171,4 +171,7 @@ return [
     'choose_status'=>'choose status',
     'service_image' => 'Service Image',
     'data_updated'=>'Data is updated',
+    'services_image'=>'Services Image',
+    'add_image_services'=>'Add service image',
+    'edit_services_image'=>'Edit service image',
 ];

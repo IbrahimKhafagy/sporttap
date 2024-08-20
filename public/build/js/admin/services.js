@@ -122,22 +122,22 @@ document.addEventListener("DOMContentLoaded", function() {
             <td class="date">${formatDate(user.created_at,userLanguage)}</td>
                 <td class="status" >${isStatus(user.is_active)}</td>
             <td>
-    <ul class="list-inline hstack gap-2 mb-0">
-        <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-            <a href="javascript:void(0);"
-               class="text-primary d-inline-block edit-item-btn"
-               data-bs-toggle="modal"
-               data-bs-target="#editServiceModal"
-               data-id="${user.id}"
-               data-name_ar="${user.name_ar}"
-               data-name_en="${user.name_en}"
-               data-is_active="${user.is_active}"
-               data-media_id="${user.media_id}">
-                <i class="ri-pencil-fill fs-16"></i>
-            </a>
-        </li>
-    </ul>
-</td>
+                <ul class="list-inline hstack gap-2 mb-0">
+                    <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+                        <a href="javascript:void(0);"
+                           class="text-primary d-inline-block edit-item-btn"
+                           data-bs-toggle="modal"
+                           data-bs-target="#editServiceModal"
+                           data-id="${user.id}"
+                           data-name_ar="${user.name_ar}"
+                           data-name_en="${user.name_en}"
+                           data-is_active="${user.is_active}"
+                           data-media_ids='${JSON.stringify(user.media_id)}'>
+                            <i class="ri-pencil-fill fs-16"></i>
+                        </a>
+                    </li>
+                </ul>
+             </td>
 
 
         `;
@@ -285,6 +285,119 @@ document.addEventListener("DOMContentLoaded", function() {
 // Event listener for search input
     document.querySelector('.search').addEventListener('input', function() {
         performSearch();
+    });
+
+
+    document.querySelector("#product-image-input").addEventListener("change", function () {
+        var previewContainer = document.querySelector("#image-preview-container");
+        var files = this.files;
+
+        Array.from(files).forEach(file => {
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var imgContainer = document.createElement("div");
+                imgContainer.className = "position-relative m-2";
+
+                var img = document.createElement("img");
+                img.src = reader.result;
+                img.style.maxWidth = "100px"; // Adjust as needed
+                img.style.margin = "5px";
+                img.className = "img-thumbnail";
+
+                var replaceButton = document.createElement("button");
+                replaceButton.innerText = "Replace";
+                replaceButton.className = "btn btn-sm btn-warning position-absolute bottom-0 start-0 m-1";
+                replaceButton.onclick = function () {
+                    var replaceInput = document.createElement("input");
+                    replaceInput.type = "file";
+                    replaceInput.accept = "image/png, image/gif, image/jpeg";
+                    replaceInput.className = "d-none";
+                    replaceInput.onchange = function () {
+                        var newFile = replaceInput.files[0];
+                        var newReader = new FileReader();
+                        newReader.onload = function () {
+                            img.src = newReader.result;
+                        };
+                        if (newFile) {
+                            newReader.readAsDataURL(newFile);
+                        }
+                    };
+                    replaceInput.click();
+                };
+
+                var deleteButton = document.createElement("button");
+                deleteButton.innerText = "Delete";
+                deleteButton.className = "btn btn-sm btn-danger position-absolute bottom-0 end-0 m-1";
+                deleteButton.onclick = function () {
+                    imgContainer.remove();
+                };
+
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(replaceButton);
+                imgContainer.appendChild(deleteButton);
+                previewContainer.appendChild(imgContainer);
+            }, false);
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var editServiceModal = document.getElementById('editServiceModal');
+        editServiceModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+
+            // Fetch data from the <a> element
+            var serviceId = button.getAttribute('data-id');
+            var nameAr = button.getAttribute('data-name_ar');
+            var nameEn = button.getAttribute('data-name_en');
+            var isActive = button.getAttribute('data-is_active');
+            var mediaIds = JSON.parse(button.getAttribute('data-media_ids'));
+
+            // If mediaIds is not an empty string, parse it
+            mediaIds = mediaIds ? JSON.parse(mediaIds) : [];
+
+            var modal = this;
+            modal.querySelector('#serviceId').value = serviceId;
+            modal.querySelector('#name_ar').value = nameAr;
+            modal.querySelector('#name_en').value = nameEn;
+            modal.querySelector('#is_active').checked = isActive === '1';
+
+            // Clear previous image previews
+            var previewContainer = document.querySelector("#image-preview-container");
+            previewContainer.innerHTML = '';
+
+            // Create new image previews
+            mediaIds.forEach(mediaId => {
+                var imgContainer = document.createElement("div");
+                imgContainer.className = "position-relative m-2";
+
+                var img = document.createElement("img");
+                img.src = `/media/${mediaId}`;
+                img.style.maxWidth = "100px";
+                img.style.margin = "5px";
+                img.className = "img-thumbnail";
+
+                var deleteButton = document.createElement("button");
+                deleteButton.innerText = "Delete";
+                deleteButton.className = "btn btn-sm btn-danger position-absolute bottom-0 end-0 m-1";
+                deleteButton.onclick = function () {
+                    imgContainer.remove();
+                };
+
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteButton);
+                previewContainer.appendChild(imgContainer);
+            });
+        });
+
+        document.getElementById('editServiceForm').addEventListener('submit', function(e) {
+            var form = this;
+            var serviceId = document.getElementById('serviceId').value;
+            form.action = form.action.replace('id', serviceId);
+        });
     });
 
     window.sortByColumn = sortByColumn;

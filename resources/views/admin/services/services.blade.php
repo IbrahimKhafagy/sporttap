@@ -138,17 +138,46 @@
                             @csrf
                             @method('PUT')
                             <input type="hidden" id="serviceId" name="id">
-                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
-                                <label for="name_ar" class="form-label">@lang('messages.name_ar')</label>
-                                <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+
+                            <div class="row mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name_ar" class="form-label">@lang('messages.name_ar')</label>
+                                    <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="name_en" class="form-label">@lang('messages.name_en')</label>
+                                    <input type="text" class="form-control" id="name_en" name="name_en" required>
+                                </div>
                             </div>
-                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
-                                <label for="name_en" class="form-label">@lang('messages.name_en')</label>
-                                <input type="text" class="form-control" id="name_en" name="name_en" required>
-                            </div>
-                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
-                                <label for="media_id" class="form-label">@lang('messages.service_image')</label>
-                                <input type="file" class="form-control" id="media_id" name="media_id" accept="image/*">
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-4">
+                                        <h5 class="fs-14 mb-1">@lang('messages.services_image')</h5>
+                                        <p class="text-muted">@lang('messages.edit_services_image')</p>
+                                        <div class="text-center">
+                                            <div class="position-relative d-inline-block">
+                                                <div class="position-absolute top-100 start-100 translate-middle">
+                                                    <label for="product-image-input" class="mb-0" data-bs-toggle="tooltip" data-bs-placement="right" title="Select Image">
+                                                        <div class="avatar-xs">
+                                                            <div class="avatar-title bg-light border rounded-circle text-muted cursor-pointer">
+                                                                <i class="ri-image-fill"></i>
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                    <input class="form-control d-none" id="product-image-input" type="file" name="images[]" accept="image/png, image/gif, image/jpeg" multiple>
+                                                </div>
+                                            </div>
+                                            <div id="image-preview-container" class="d-flex flex-wrap mt-3">
+                                                @if (isset( $service->media_id) && count( $service->media_id) > 0)
+                                                    @foreach ( $service->media_id as $imageUrl)
+                                                        <img src="{{ $imageUrl }}" class="img-thumbnail" style="max-width: 100px; margin: 5px;">
+                                                    @endforeach
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
@@ -177,17 +206,39 @@
                     <form action="/admin/services" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="name_ar" class="form-label">@lang('messages.name_ar')</label>
-                                <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+                            <div class="row mb-3" style="font-family: 'Tajawal', sans-serif;">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name_ar" class="form-label">@lang('messages.name_ar')</label>
+                                    <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="name_en" class="form-label">@lang('messages.name_en')</label>
+                                    <input type="text" class="form-control" id="name_en" name="name_en" required>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="name_en" class="form-label">@lang('messages.name_en')</label>
-                                <input type="text" class="form-control" id="name_en" name="name_en" required>
-                            </div>
-                            <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
-                                <label for="media_id" class="form-label">@lang('messages.service_image')</label>
-                                <input type="file" class="form-control" id="media_id" name="image" accept="image/*">
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-4">
+                                        <h5 class="fs-14 mb-1">@lang('messages.services_image')</h5>
+                                        <p class="text-muted">@lang('messages.add_image_services')</p>
+                                        <div class="text-center">
+                                            <div class="position-relative d-inline-block">
+                                                <div class="position-absolute top-100 start-100 translate-middle">
+                                                    <label for="product-image-input" class="mb-0" data-bs-toggle="tooltip" data-bs-placement="right" title="Select Image">
+                                                        <div class="avatar-xs">
+                                                            <div class="avatar-title bg-light border rounded-circle text-muted cursor-pointer">
+                                                                <i class="ri-image-fill"></i>
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                    <input class="form-control d-none" id="product-image-input" type="file" accept="image/png, image/gif, image/jpeg" name="images[]" multiple>
+                                                </div>
+                                            </div>
+                                            <div id="image-preview-container" class="d-flex flex-wrap mt-3"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="mb-3" style="font-family: 'Tajawal', sans-serif;">
@@ -243,19 +294,48 @@
             editServiceModal.addEventListener('show.bs.modal', function(event) {
                 var button = event.relatedTarget;
 
-                // جلب البيانات من الـ<a>
+                // Fetch data from the <a> element
                 var serviceId = button.getAttribute('data-id');
                 var nameAr = button.getAttribute('data-name_ar');
                 var nameEn = button.getAttribute('data-name_en');
                 var isActive = button.getAttribute('data-is_active');
-                var mediaId = button.getAttribute('data-media_id');
+                var mediaIds = JSON.parse(button.getAttribute('data-media_ids'));
+
+                // If mediaIds is not an empty string, parse it
+                mediaIds = mediaIds ? JSON.parse(mediaIds) : [];
 
                 var modal = this;
                 modal.querySelector('#serviceId').value = serviceId;
                 modal.querySelector('#name_ar').value = nameAr;
                 modal.querySelector('#name_en').value = nameEn;
-                modal.querySelector('#is_active').value = isActive;
-                modal.querySelector('#media_id').value = mediaId;
+                modal.querySelector('#is_active').checked = isActive === '1';
+
+                // Clear previous image previews
+                var previewContainer = document.querySelector("#image-preview-container");
+                previewContainer.innerHTML = '';
+
+                // Create new image previews
+                mediaIds.forEach(mediaId => {
+                    var imgContainer = document.createElement("div");
+                    imgContainer.className = "position-relative m-2";
+
+                    var img = document.createElement("img");
+                    img.src = `/media/${mediaId}`;
+                    img.style.maxWidth = "100px";
+                    img.style.margin = "5px";
+                    img.className = "img-thumbnail";
+
+                    var deleteButton = document.createElement("button");
+                    deleteButton.innerText = "Delete";
+                    deleteButton.className = "btn btn-sm btn-danger position-absolute bottom-0 end-0 m-1";
+                    deleteButton.onclick = function () {
+                        imgContainer.remove();
+                    };
+
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(deleteButton);
+                    previewContainer.appendChild(imgContainer);
+                });
             });
 
             document.getElementById('editServiceForm').addEventListener('submit', function(e) {

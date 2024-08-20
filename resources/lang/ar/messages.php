@@ -170,4 +170,7 @@ return [
     'update_services'=>'تعديل الخدمة',
     'service_image' => 'صورة الخدمة',
     'data_updated'=>'تم تعديل البيانات',
+    'services_image'=>'صورة الخدمة',
+    'add_image_services'=>'اضف صورة الخدمة',
+    'edit_services_image'=>'عدل صورة الخدمة'
 ];
