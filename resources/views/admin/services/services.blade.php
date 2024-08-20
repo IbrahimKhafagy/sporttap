@@ -288,6 +288,66 @@
     </script>
     <script src="{{ URL::asset('build/js/app.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        document.querySelector("#product-image-input").addEventListener("change", function () {
+            var previewContainer = document.querySelector("#image-preview-container");
+            var files = this.files;
+
+            Array.from(files).forEach(file => {
+                var reader = new FileReader();
+                reader.addEventListener("load", function () {
+                    var imgContainer = document.createElement("div");
+                    imgContainer.className = "position-relative m-2";
+
+                    var img = document.createElement("img");
+                    img.src = reader.result;
+                    img.style.maxWidth = "100px"; // Adjust as needed
+                    img.style.margin = "5px";
+                    img.className = "img-thumbnail";
+
+                    var replaceButton = document.createElement("button");
+                    replaceButton.innerText = "Replace";
+                    replaceButton.className = "btn btn-sm btn-warning position-absolute bottom-0 start-0 m-1";
+                    replaceButton.onclick = function () {
+                        var replaceInput = document.createElement("input");
+                        replaceInput.type = "file";
+                        replaceInput.accept = "image/png, image/gif, image/jpeg";
+                        replaceInput.className = "d-none";
+                        replaceInput.onchange = function () {
+                            var newFile = replaceInput.files[0];
+                            var newReader = new FileReader();
+                            newReader.onload = function () {
+                                img.src = newReader.result;
+                            };
+                            if (newFile) {
+                                newReader.readAsDataURL(newFile);
+                            }
+                        };
+                        replaceInput.click();
+                    };
+
+                    var deleteButton = document.createElement("button");
+                    deleteButton.innerText = "Delete";
+                    deleteButton.className = "btn btn-sm btn-danger position-absolute bottom-0 end-0 m-1";
+                    deleteButton.onclick = function () {
+                        imgContainer.remove();
+                    };
+
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(replaceButton);
+                    imgContainer.appendChild(deleteButton);
+                    previewContainer.appendChild(imgContainer);
+                }, false);
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var editServiceModal = document.getElementById('editServiceModal');

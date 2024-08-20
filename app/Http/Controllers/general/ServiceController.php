@@ -78,7 +78,7 @@ class ServiceController extends Controller
         $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'media_id' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'nullable|boolean',
         ]);
 
@@ -88,13 +88,13 @@ class ServiceController extends Controller
             return redirect()->route('admin.services.index')->with('error', 'Service not found!');
         }
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
+        if ($request->hasFile('media_id')) {
+            $file = $request->file('media_id');
             $fileName = $file->getClientOriginalName();
 
-            $tempMedia = TempMedia::firstOrCreate(['name' => $fileName]);
+            $tempMedia = Media::firstOrCreate(['name' => $fileName]);
 
-            $media = $tempMedia->addMedia($file)->toMediaCollection('images');
+            $media = $tempMedia->addMedia($file)->toMediaCollection('media_id');
 
             $service->media_id = $media->id;
         }
@@ -111,18 +111,18 @@ class ServiceController extends Controller
         $validatedData = $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'images' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'media_id' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'nullable|boolean',
         ]);
 
         $mediaIds = [];
 
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
+        if ($request->hasFile('media_id')) {
+            foreach ($request->file('media_id') as $file) {
                 $fileName = $file->getClientOriginalName();
                 // Assuming TempMedia is the model used to handle media files
-                $yourModel = TempMedia::firstOrCreate(['name' => $fileName]);
-                $media = $yourModel->addMedia($file)->toMediaCollection('images');
+                $yourModel = Media::firstOrCreate(['name' => $fileName]);
+                $media = $yourModel->addMedia($file)->toMediaCollection('media_id');
                 $mediaIds[] = $media->id;
             }
         }
@@ -134,7 +134,7 @@ class ServiceController extends Controller
         $service->media_id = json_encode($mediaIds); // Assuming media_ids is stored as JSON
         $service->save();
 
-        return redirect()->route('admin.services.index')->with('success', 'Service updated successfully!');
+        return redirect()->route('admin.services.index')->with('success', 'Service create successfully!');
 
     }
 
