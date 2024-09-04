@@ -51,7 +51,7 @@
                 </li>
 
                 <li class="nav-item">
-                     <a class="nav-link menu-link" href="{{route('admin.clients.index')}}">
+                     <a class="nav-link menu-link" href="{{route('admin.reservations.index')}}">
                         <i class="mdi mdi-timer-outline"></i> <span>@lang('messages.reservations')</span>
                     </a>
                 </li>

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-@lang('translation.orders')
+@lang('translation.reservations')
 @endsection
 @section('css')
 @endsection
@@ -345,6 +345,6 @@ Orders
 <script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>
 <script src="{{ URL::asset('build/libs/list.pagination.js/list.pagination.min.js') }}"></script>
 
-<script src="{{ URL::asset('build/js/pages/crypto-orders.init.js') }}"></script>
+<script src="{{ URL::asset('build/js/pages/crypto-reservations.init.js') }}"></script>
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-@lang('translation.orders')
+@lang('translation.reservations')
 @endsection
 @section('css')
 <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />

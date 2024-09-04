@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\ReservationAdminController;
 use App\Http\Controllers\clients\ClientController;
 use App\Http\Controllers\general\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -75,6 +76,9 @@ Route::get('/', [HomeController::class, 'root'])->name('root');
             Route::get('/places', [PlaceController::class, 'index'])->name('places.index');
             Route::get('/places/{id}', [PlaceController::class, 'show'])->name('places.show');
 
+
+            Route::get('/reservations', [ReservationAdminController::class, 'index'])->name('reservations.index');
+            Route::get('/reservations/{id}', [ReservationAdminController::class, 'orderDetails'])->name('orderDetails');
 
         });
 

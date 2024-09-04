@@ -1,0 +1,595 @@
+
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+    var currentPage = 1;
+    var totalPages = 1; // Total number of page
+    var perPage = 50; // Number of users per page
+    var apiUrl = "/api/admin/getReservations"; // API endpoint to fetch user data
+
+    var formattedStartDate="";
+    var formattedEndDate="";
+    var selectCountryCode="+966"
+    var status="all";
+        var event="";
+
+
+        let statusField = document.getElementById("status-field");
+        var statusVal = new Choices(statusField);
+
+        let statusFieldd = document.getElementById("idStatus");
+        var statusValf  = new Choices(statusFieldd, {
+            searchEnabled: false,
+        });
+
+        let eventsWithTicketsField = document.getElementById("eventsWithTickets");
+        var eventsWithTicketsVal  = new Choices(eventsWithTicketsField, {
+            searchEnabled: true,
+        });
+
+
+    flatpickr("#datepicker-range", {
+        locale: "ar",
+        mode: "range"  ,
+        dateFormat: "d M, Y",
+        range: true,
+        onChange: function(selectedDates, dateStr, instance) {
+             formattedStartDate="";
+             formattedEndDate="";
+            if (selectedDates.length === 2) {
+                var startDate = formatDatePicker(selectedDates[0]);
+                var endDate = formatDatePicker(selectedDates[1]);
+                 formattedStartDate = addDays(selectedDates[0], 1);
+                 formattedEndDate = addDays(selectedDates[1], 1);
+                console.log("Selected date range:", formattedStartDate, "to", formattedEndDate);
+                instance.element.value = startDate + " إلى " + endDate;
+            }
+            else if (selectedDates.length === 1) {
+                instance.element.value = formatDatePicker(selectedDates[0]);
+            }
+        }
+    });
+
+    function addDays(date, days) {
+        var newDate = new Date(date);
+        newDate.setDate(newDate.getDate() + days);
+        return newDate.toISOString().split('T')[0];
+    }
+
+    function formatDatePicker(date) {
+        var day = date.getDate();
+        var month = date.toLocaleDateString("ar-EG", { month: "long" });
+        var year = date.getFullYear();
+        return `${day} ${month}، ${year}`;
+    }
+
+
+    function fetchUsers(page, column, direction,searchQuery) {
+        var queryString = `?page=${page}&column=${column}&direction=${direction}&status=${status}&playground_id=${event}`;
+
+        if (searchQuery) {
+            queryString += `&search=${searchQuery}`;
+        }
+        if (formattedStartDate!=="" && formattedEndDate!=="") {
+            queryString += `&startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
+        }
+
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onload = function () {
+            var json_records = JSON.parse(this.responseText);
+            totalPages = Math.ceil(json_records.total / perPage);
+            updateTable(json_records.data);
+            updatePaginationButtons();
+            toggleTableVisibility(json_records.data.length === 0);
+        };
+        xhttp.open("GET", apiUrl + queryString);
+        xhttp.send();
+    }
+
+    function toggleTableVisibility(hasResults) {
+        const noResultMessage = document.querySelector('.noresult');
+        if (hasResults) {
+            noResultMessage.style.display = 'block'; // Hide the no result message
+        } else {
+            noResultMessage.style.display = 'none'; // Show the no result message
+        }
+    }
+
+    // Function to update the table with user data
+    function updateTable(users) {
+        var tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+        users.forEach(user => {
+            var row = document.createElement('tr');
+            row.innerHTML = `
+                <td scope="row">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
+                    </div>
+                </td>
+                <td class="id" style="display:none;"><a href="javascript:void(0);" class="fw-medium link-primary">${user.id}</a></td>
+                <td class="order_id">${user.id}</td>
+                <td class="client_name">${user.user.first_name + " "+ user.user.last_name }</td>
+                <td class="client_phone">${user.user.phone}</td>
+                                <td class="event_name">${user.playground.name_ar}</td>
+                                                <td class="num_of_ticket">${user.match_time} دق </td>
+                <td class="grand_total">${user.type==='special' ? 'خاصة' : user.type==='competitive' ?'تنافسية' :'ودية'} </td>
+                <td class="grand_total">${user.paid_amount} ريال</td>
+
+                <td class="grand_total">${user.grand_total} ريال</td>
+
+<td class="date">${formatDate(user.reservation_date,'ar')}</td>
+<td class="date">${convertTo12HourFormatArabic(user.reservation_time,'ar')}</td>
+
+                <td class="status" >${isStatus(user.status)}</td>
+                <td>
+                    <ul class="list-inline hstack gap-2 mb-0">
+<!--                        <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">-->
+<!--                            <a href="#showModal" data-bs-toggle="modal" class="text-primary d-inline-block edit-item-btn">-->
+<!--                                <i class="ri-pencil-fill fs-16"></i>-->
+<!--                            </a>-->
+<!--                        </li>-->
+                        <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" aria-label="View" data-bs-original-title="View">
+                                                                    <a href="/admin/reservations/${user.id}" class="text-primary d-inline-block">
+                                                                        <i class="ri-eye-fill fs-16"></i>
+                                                                    </a>
+                                                                </li>
+
+                    </ul>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Function to update pagination buttons based on current page and total pages
+// Function to update pagination buttons based on current page and total pages
+    function updatePaginationButtons() {
+        var prevButton = document.querySelector(".pagination-prev");
+        var nextButton = document.querySelector(".pagination-next");
+
+        // Disable previous button if on the first page
+        if (currentPage === 1) {
+            prevButton.classList.add("disabled");
+        } else {
+            prevButton.classList.remove("disabled");
+        }
+
+        // Disable next button if on the last page
+        if (currentPage === totalPages) {
+            nextButton.classList.add("disabled");
+        } else {
+            nextButton.classList.remove("disabled");
+        }
+
+        // Clear existing page number buttons
+        var pageNumberContainer = document.querySelector(".pagination.listjs-pagination");
+        pageNumberContainer.innerHTML = "";
+
+        // Define the number of adjacent page numbers to display (adjust as needed)
+        var adjacentPageNumbers = 1;
+        var startPage = Math.max(1, currentPage - adjacentPageNumbers);
+        var endPage = Math.min(totalPages, currentPage + adjacentPageNumbers);
+
+        // Add page number buttons
+        for (var i = startPage; i <= endPage; i++) {
+            var pageNumberButton = document.createElement("li");
+            pageNumberButton.textContent = i;
+            pageNumberButton.classList.add("page-item");
+            if (i === currentPage) {
+                pageNumberButton.classList.add("active");
+            }
+            pageNumberButton.addEventListener("click", function() {
+                currentPage = parseInt(this.textContent);
+                fetchData(currentPage);
+                updatePaginationButtons();
+            });
+            pageNumberContainer.appendChild(pageNumberButton);
+        }
+
+        // Add ellipsis if there are more pages before the first page
+        if (startPage > 1) {
+            var ellipsis = document.createElement("li");
+            ellipsis.textContent = "...";
+            ellipsis.classList.add("disabled");
+            pageNumberContainer.insertBefore(ellipsis, pageNumberContainer.firstChild);
+        }
+
+        // Add ellipsis if there are more pages after the last page
+        if (endPage < totalPages) {
+            var ellipsis = document.createElement("li");
+            ellipsis.textContent = "...";
+            ellipsis.classList.add("disabled");
+            pageNumberContainer.appendChild(ellipsis);
+        }
+    }
+
+    // Event listener for previous button click
+    document.querySelector(".pagination-prev").addEventListener("click", function() {
+        if (currentPage > 1) {
+            currentPage--;
+            fetchUsers(currentPage);
+            updatePaginationButtons();
+        }
+    });
+
+    // Event listener for next button click
+    document.querySelector(".pagination-next").addEventListener("click", function() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            fetchUsers(currentPage);
+            updatePaginationButtons();
+        }
+    });
+
+    // Initial setup
+    updatePaginationButtons();
+
+    // Function to determine status
+    function isStatus(val) {
+        return val==="pending_payment" ? '<span class="badge bg-warning-subtle text-warning text-uppercase">انتظار الدفع</span>'
+          :  val==="partial_payment" ? '<span class="badge bg-info-subtle text-info text-uppercase">دفع جزئي</span>'
+                :  val==="completed" ? '<span class="badge bg-success-subtle text-success text-uppercase"> مكتمل</span>'
+                    :  val==="confirmed" ? '<span class="badge bg-secondary-subtle text-secondary text-uppercase"> تم الدفع</span>'
+                        :  val==="payment_failed" ? '<span class="badge bg-danger-subtle text-danger text-uppercase"> فشل الدفع</span>'
+                            :  val==="refunded" ? '<span class="badge bg-danger-subtle text-danger text-uppercase"> مسترجع </span>'
+
+                                : '<span class="badge bg-danger-subtle text-danger text-uppercase"> ملغي</span>';
+    }
+
+    function formatDate(dateString, locale) {
+        const options = { day: '2-digit', month: 'short', year: 'numeric' };
+        const date = new Date(dateString);
+        return date.toLocaleDateString(locale, options);
+    }
+        function convertTo12HourFormatArabic(time24) {
+            // Split the time into hours, minutes, and seconds
+            var parts = time24.split(':');
+            var hours = parseInt(parts[0]);
+            var minutes = parseInt(parts[1]);
+            var seconds = parseInt(parts[2]);
+
+            // Determine AM/PM
+            var ampm = hours >= 12 ? 'مساءً' : 'صباحًا';
+
+            // Convert hours to 12-hour format
+            hours = hours % 12;
+            hours = hours ? hours : 12; // 0 should be converted to 12
+
+            // Ensure leading zero for single-digit minutes and seconds
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            // Return the formatted time
+            return hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+        }
+
+
+        function sortByColumn(columnName) {
+        // Determine sorting direction based on current column state
+        var currentColumn = document.querySelector(`th[data-sort=${columnName}]`);
+        var sortOrder = currentColumn.classList.contains('asc') ? 'desc' : 'asc';
+
+        // Remove sorting indicators from other columns
+        var sortHeaders = document.querySelectorAll('.sort');
+        sortHeaders.forEach(header => {
+            if (header !== currentColumn) {
+                header.classList.remove('asc', 'desc');
+            }
+        });
+
+
+        // Add sorting indicator to current column
+        currentColumn.classList.remove('asc', 'desc'); // Remove existing sorting classes
+        currentColumn.classList.add(sortOrder);
+        // Fetch users based on the selected column and sorting direction
+        fetchUsers(currentPage, columnName, sortOrder);
+    }
+
+
+    // Function to perform search
+    function performSearch() {
+        var searchInput = document.querySelector('.search').value.toLowerCase();
+        currentPage=1;
+        status = document.getElementById("idStatus").value;
+        event = document.getElementById("eventsWithTickets").value;
+
+        fetchUsers(currentPage,'created_at','desc',searchInput);
+
+
+    }
+
+
+    document.getElementById("showModal").addEventListener("show.bs.modal", function (e) {
+        var relatedTarget = e.relatedTarget;
+        if (relatedTarget && relatedTarget.classList.contains("edit-item-btn")) {
+            // If the related target is an edit button, populate modal with edit data
+            var row = relatedTarget.closest("tr");
+            var customerId = row.querySelector('.id').innerText;
+            var customerName = row.querySelector('.customer_name').innerText;
+            var customerEmail = row.querySelector('.email').innerText;
+            var customerPhone = row.querySelector('.phone').innerText;
+            var status = row.querySelector('.status').innerText==="غير نشط"  ? "0":"1";
+            var statusField = document.getElementById('status-field');
+            var originalData = {};
+            originalData["name"]=customerName;
+            originalData["phone"]=customerPhone;
+            originalData["email"]=customerEmail;
+            originalData["status"] = status;
+
+            // Populate modal form fields with the extracted data
+            document.getElementById('id-field').value = customerId;
+            document.getElementById('customername-field').value = customerName;
+            document.getElementById('email-field').value = customerEmail;
+            document.getElementById('phone-field').value = extractPhoneNumber(customerPhone);
+
+            selectCountryByPhoneNumber(customerPhone)
+
+            if (statusVal) statusVal.destroy();
+
+             statusVal = new Choices(statusField, {
+                searchEnabled: false,
+            });
+             statusVal.setChoiceByValue(status);
+
+
+
+
+
+            // Update modal title and button text
+            document.getElementById('exampleModalLabel').innerText = 'تعديل بيانات العميل ';
+            document.getElementById('add-btn').innerText = 'تحديث';
+            document.getElementById("showModal").querySelector(".modal-footer").style.display = "block";
+            document.querySelector('.tablelist-form').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission behavior
+
+                // Retrieve form data from the modal
+
+                var id = document.getElementById("id-field").value;
+                var editedData = {};
+
+                editedData["name"]=document.getElementById('customername-field').value;
+                editedData["phone"]=concatenatePhoneNumber();
+                editedData["email"]=document.getElementById('email-field').value;
+                editedData["status"] = document.getElementById("status-field").value;
+
+                var password = document.getElementById("password-input").value
+                if(password.length>0){
+                    editedData["password"] = password;
+
+                }
+
+                var requestData = {};
+
+                for (var key in editedData) {
+                    if (editedData.hasOwnProperty(key)) {
+                        // Check if the value has changed
+                        if (editedData[key] !== originalData[key]) {
+                            requestData[key] = editedData[key];
+                        }
+                    }
+                }
+
+
+
+                // Convert form data to JSON format
+
+
+
+
+                // Prepare the HTTP request
+                var xhr = new XMLHttpRequest();
+                var url = `/api/admins/EditUser/${id}`; // Replace this with your API endpoint URL
+                xhr.open('PUT', url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+                // Send the request with the edited data
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        var response = JSON.parse(this.responseText);
+                        if (response.status === 200) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: response.msg,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                showCloseButton: true
+                            });
+
+
+                            fetchUsers(currentPage,'created_at','desc');
+
+
+
+                            // row.querySelector('.status').innerText==="غير نشط"  ? "0":"1";
+                            document.getElementById("close-modal").click();
+
+                        } else {
+                            // Handle error response from the API
+                            //  console.error('Edit failed:', xhr.responseText);
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: response.msg,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                showCloseButton: true
+                            });
+                        }
+                    }
+                };
+
+                if (Object.keys(requestData).length > 0) {
+
+
+                    // Send the JSON data in the request body
+                    xhr.send(JSON.stringify(requestData));
+                }else {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: "لم يحدث اي تعديل",
+                        showConfirmButton: false,
+                        timer: 2000,
+                        showCloseButton: true
+                    });
+                }
+            });
+
+
+
+        }
+        else if (relatedTarget && relatedTarget.classList.contains("add-btnt")) {
+            // If the related target is an add button, clear modal fields and update modal title
+            document.getElementById('customername-field').value = "";
+            document.getElementById('email-field').value = "";
+            document.getElementById('phone-field').value = "";
+            var statusField = document.getElementById('status-field');
+
+            if (statusVal) statusVal.destroy();
+
+            statusVal = new Choices(statusField, {
+                searchEnabled: false,
+            });
+            statusVal.setChoiceByValue("");
+
+
+            document.getElementById('exampleModalLabel').innerText = 'اضافة عميل جديد';
+            document.getElementById('add-btn').innerText = 'اضف الآن';
+            document.getElementById("showModal").querySelector(".modal-footer").style.display = "block";
+            document.querySelector('.tablelist-form').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission behavior
+
+                // Retrieve form data from the modal
+
+                var name = document.getElementById('customername-field').value;
+                var phone = document.getElementById('phone-field').value;
+                var email = document.getElementById('email-field').value;
+                var password = document.getElementById("password-input").value
+                var status=  document.getElementById("status-field").value;
+
+                const customerNameField = document.getElementById('customername-field');
+                const customerEmailField = document.getElementById('email-field');
+                const customerPhoneField = document.getElementById('phone-field');
+                const customerPasswordField = document.getElementById('password-input');
+
+
+                var requestData = {};
+
+                // Prepare the HTTP request
+                var xhr = new XMLHttpRequest();
+                var url = `/api/admins/create_user`; // Replace this with your API endpoint URL
+                xhr.open('Post', url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+                // Send the request with the edited data
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        var response = JSON.parse(this.responseText);
+                        if (response.status === 200) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: response.msg,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                showCloseButton: true
+                            });
+
+                            fetchUsers(currentPage,'created_at','desc');
+                            document.getElementById("close-modal").click();
+
+                        } else {
+
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: response.msg,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                showCloseButton: true
+                            });
+                        }
+                    }
+                };
+                if (customerNameField.value.trim() === '') {
+                    customerNameField.classList.add('is-invalid');
+                    return
+                } else {
+                    customerNameField.classList.remove('is-invalid');
+                }
+
+                if (customerEmailField.value.trim() === '') {
+                    customerEmailField.classList.add('is-invalid');
+                    return
+
+                } else {
+                    customerEmailField.classList.remove('is-invalid');
+                }
+
+                if (customerPhoneField.value.trim() === '') {
+                    customerPhoneField.classList.add('is-invalid');
+                    return
+                } else {
+                    customerPhoneField.classList.remove('is-invalid');
+
+                }
+
+                if (customerPasswordField.value.trim() === '') {
+                    customerPasswordField.classList.add('is-invalid');
+                    return
+                } else {
+                    customerPasswordField.classList.remove('is-invalid');
+                }
+                requestData["name"]=name;
+                requestData["email"]=email;
+                requestData["phone"]=concatenatePhoneNumber();
+                requestData["password"]=password;
+                requestData["status"]=status;
+
+                    xhr.send(JSON.stringify(requestData));
+
+            });
+
+        } else {
+            // If the related target is not recognized, hide the modal footer
+            document.getElementById("showModal").querySelector(".modal-footer").style.display = "none";
+        }
+
+
+
+    });
+        document.getElementById("exportButton").addEventListener("click", function() {
+            var queryString = `?export=true&status=${status}&event_id=${event}`;
+
+            if (formattedStartDate !== "" && formattedEndDate !== "") {
+                queryString += `&startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
+            }
+
+            var searchQuery = document.querySelector('.search').value.toLowerCase();
+            if (searchQuery) {
+                queryString += `&search=${searchQuery}`;
+            }
+
+            window.location.href = apiUrl + queryString;
+        });
+
+// Event listener for search input
+    document.querySelector('.search').addEventListener('input', function() {
+        performSearch();
+    });
+
+    window.sortByColumn = sortByColumn;
+    window.performSearch = performSearch;
+
+    // Initial fetch to load the first page of users
+    fetchUsers(currentPage,'created_at','desc');
+});
+
+

@@ -69,13 +69,13 @@ var dropzone = new Dropzone(".dropzone", {
         }
     });
 
-    
+
 
     // choices category input
     var prdoctCategoryInput = new Choices('#choices-category-input', {
         searchEnabled: false,
     });
-    
+
     var editinputValueJson = sessionStorage.getItem('editInputValue');
     if (editinputValueJson) {
         var editinputValueJson = JSON.parse(editinputValueJson);
@@ -85,11 +85,11 @@ var dropzone = new Dropzone(".dropzone", {
         document.getElementById("product-title-input").value = editinputValueJson.product.title;
         document.getElementById("stocks-input").value = editinputValueJson.stock;
         document.getElementById("product-price-input").value = editinputValueJson.price;
-        document.getElementById("orders-input").value = editinputValueJson.orders;
+        document.getElementById("reservations-input").value = editinputValueJson.orders;
         prdoctCategoryInput.setChoiceByValue(editinputValueJson.product.category);
     }
 
-   
+
     // Loop over them and prevent submission
     Array.prototype.slice.call(forms)
         .forEach(function (form) {
@@ -105,7 +105,7 @@ var dropzone = new Dropzone(".dropzone", {
                     var productTitleValue = document.getElementById("product-title-input").value;
                     var prdoctCategoryValue = prdoctCategoryInput.getValue(true);
                     var stockInputValue = document.getElementById("stocks-input").value;
-                    var orderValue = document.getElementById("orders-input").value;
+                    var orderValue = document.getElementById("reservations-input").value;
                     var productPriceValue = document.getElementById("product-price-input").value;
                     var productImageValue = document.getElementById("product-img").src;
 

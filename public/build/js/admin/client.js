@@ -18,8 +18,31 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-    let typeField = document.getElementById("idStatus");
+    let typeField = document.getElementById("sport_type");
     var typeVal =  new Choices(typeField, {
+        searchEnabled: false,
+    });
+
+
+
+    let genderField = document.getElementById("gender");
+    var genderVal =  new Choices(genderField, {
+        searchEnabled: false,
+    });
+
+    let levelField = document.getElementById("level");
+    var levelVal =  new Choices(levelField, {
+        searchEnabled: false,
+    });
+
+
+    let ageField = document.getElementById("age");
+    var ageVal =  new Choices(ageField, {
+        searchEnabled: false,
+    });
+
+    let isActiveField = document.getElementById("is_active");
+    var isActiveVal =  new Choices(isActiveField, {
         searchEnabled: false,
     });
 
