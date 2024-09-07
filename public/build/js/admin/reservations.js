@@ -1,15 +1,15 @@
 
-
-
     document.addEventListener("DOMContentLoaded", function() {
     var currentPage = 1;
     var totalPages = 1; // Total number of page
     var perPage = 50; // Number of users per page
     var apiUrl = "/api/admin/getReservations"; // API endpoint to fetch user data
+        const userLanguage = window.languageSettings.locale;
 
     var formattedStartDate="";
     var formattedEndDate="";
     var selectCountryCode="+966"
+        console.log(userLanguage);
     var status="all";
         var event="";
 
@@ -97,53 +97,63 @@
     }
 
     // Function to update the table with user data
-    function updateTable(users) {
-        var tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = '';
-        users.forEach(user => {
-            var row = document.createElement('tr');
-            row.innerHTML = `
-                <td scope="row">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
-                    </div>
-                </td>
-                <td class="id" style="display:none;"><a href="javascript:void(0);" class="fw-medium link-primary">${user.id}</a></td>
-                <td class="order_id">${user.id}</td>
-                <td class="client_name">${user.user.first_name + " "+ user.user.last_name }</td>
-                <td class="client_phone">${user.user.phone}</td>
-                                <td class="event_name">${user.playground.name_ar}</td>
-                                                <td class="num_of_ticket">${user.match_time} دق </td>
-                <td class="grand_total">${user.type==='special' ? 'خاصة' : user.type==='competitive' ?'تنافسية' :'ودية'} </td>
-                <td class="grand_total">${user.paid_amount} ريال</td>
+        function updateTable(users) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
 
-                <td class="grand_total">${user.grand_total} ريال</td>
+            users.forEach(user => {
+                const row = document.createElement('tr');
 
-<td class="date">${formatDate(user.reservation_date,'ar')}</td>
-<td class="date">${convertTo12HourFormatArabic(user.reservation_time,'ar')}</td>
+                // Set the content based on the language
+                const eventName = userLanguage === 'ar' ? user.playground.name_ar : user.playground.name_en;
+                const reservationDate = formatDate(user.reservation_date, userLanguage);
+                const reservationTime = convertTo12HourFormatArabic(user.reservation_time, userLanguage);
+                const numOfTickets = userLanguage === 'ar' ? `${user.match_time} دق` : `${user.match_time} min`;
+                const grandTotalText = userLanguage === 'ar' ? `${user.grand_total} ريال` : `${user.grand_total} SAR`;
+                const paidAmountText = userLanguage === 'ar' ? `${user.paid_amount} ريال` : `${user.paid_amount} SAR`;
+                const typeTranslation = {
+                    special: userLanguage === 'ar' ? 'خاصة' : 'Special',
+                    competitive: userLanguage === 'ar' ? 'تنافسية' : 'Competitive',
+                    friendly: userLanguage === 'ar' ? 'ودية' : 'Friendly'
+                };
+                const grandTotalType = typeTranslation[user.type] || user.type;
+                const currencyText = userLanguage === 'ar' ? 'ريال' : 'SAR';
 
-                <td class="status" >${isStatus(user.status)}</td>
-                <td>
-                    <ul class="list-inline hstack gap-2 mb-0">
-<!--                        <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">-->
-<!--                            <a href="#showModal" data-bs-toggle="modal" class="text-primary d-inline-block edit-item-btn">-->
-<!--                                <i class="ri-pencil-fill fs-16"></i>-->
-<!--                            </a>-->
-<!--                        </li>-->
-                        <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" aria-label="View" data-bs-original-title="View">
-                                                                    <a href="/admin/reservations/${user.id}" class="text-primary d-inline-block">
-                                                                        <i class="ri-eye-fill fs-16"></i>
-                                                                    </a>
-                                                                </li>
+                row.innerHTML = `
+            <td scope="row">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
+                </div>
+            </td>
+            <td class="id" style="display:none;"><a href="javascript:void(0);" class="fw-medium link-primary">${user.id}</a></td>
+            <td class="order_id">${user.id}</td>
+            <td class="client_name">${user.user.first_name + " " + user.user.last_name}</td>
+            <td class="client_phone">${user.user.phone}</td>
+            <td class="event_name">${eventName}</td>
+            <td class="num_of_ticket">${numOfTickets}</td>
+            <td class="grand_total">${grandTotalType}</td>
+            <td class="grand_total">${paidAmountText} </td>
+            <td class="grand_total">${grandTotalText} </td>
+            <td class="date">${reservationDate}</td>
+            <td class="date">${reservationTime}</td>
+            <td class="status">${isStatus(user.status)}</td>
+            <td>
+                <ul class="list-inline hstack gap-2 mb-0">
+                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" aria-label="View" data-bs-original-title="View">
+                        <a href="/admin/reservations/${user.id}" class="text-primary d-inline-block">
+                            <i class="ri-eye-fill fs-16"></i>
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        `;
 
-                    </ul>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
-    }
+                tableBody.appendChild(row);
+            });
+        }
 
-    // Function to update pagination buttons based on current page and total pages
+
+        // Function to update pagination buttons based on current page and total pages
 // Function to update pagination buttons based on current page and total pages
     function updatePaginationButtons() {
         var prevButton = document.querySelector(".pagination-prev");
@@ -227,16 +237,21 @@
     updatePaginationButtons();
 
     // Function to determine status
-    function isStatus(val) {
-        return val==="pending_payment" ? '<span class="badge bg-warning-subtle text-warning text-uppercase">انتظار الدفع</span>'
-          :  val==="partial_payment" ? '<span class="badge bg-info-subtle text-info text-uppercase">دفع جزئي</span>'
-                :  val==="completed" ? '<span class="badge bg-success-subtle text-success text-uppercase"> مكتمل</span>'
-                    :  val==="confirmed" ? '<span class="badge bg-secondary-subtle text-secondary text-uppercase"> تم الدفع</span>'
-                        :  val==="payment_failed" ? '<span class="badge bg-danger-subtle text-danger text-uppercase"> فشل الدفع</span>'
-                            :  val==="refunded" ? '<span class="badge bg-danger-subtle text-danger text-uppercase"> مسترجع </span>'
-
-                                : '<span class="badge bg-danger-subtle text-danger text-uppercase"> ملغي</span>';
-    }
+        function isStatus(val) {
+            return val === 'pending_payment'
+                ? `<span class="badge bg-warning-subtle text-warning text-uppercase">${userLanguage === "en" ? 'Pending Payment' : 'انتظار الدفع'}</span>`
+                : val === 'partial_payment'
+                    ? `<span class="badge bg-info-subtle text-info text-uppercase">${userLanguage === "en" ? 'Partial Payment' : 'دفع جزئي'}</span>`
+                    : val === 'completed'
+                        ? `<span class="badge bg-success-subtle text-success text-uppercase">${userLanguage === "en" ? 'Completed' : 'مكتمل'}</span>`
+                        : val === 'confirmed'
+                            ? `<span class="badge bg-secondary-subtle text-secondary text-uppercase">${userLanguage === "en" ? 'Confirmed' : 'تم الدفع'}</span>`
+                            : val === 'payment_failed'
+                                ? `<span class="badge bg-danger-subtle text-danger text-uppercase">${userLanguage === "en" ? 'Payment Failed' : 'فشل الدفع'}</span>`
+                                : val === 'refunded'
+                                    ? `<span class="badge bg-danger-subtle text-danger text-uppercase">${userLanguage === "en" ? 'Refunded' : 'مسترجع'}</span>`
+                                    : `<span class="badge bg-danger-subtle text-danger text-uppercase">${userLanguage === "en" ? 'Cancelled' : 'ملغي'}</span>`;
+        }
 
     function formatDate(dateString, locale) {
         const options = { day: '2-digit', month: 'short', year: 'numeric' };
@@ -251,7 +266,7 @@
             var seconds = parseInt(parts[2]);
 
             // Determine AM/PM
-            var ampm = hours >= 12 ? 'مساءً' : 'صباحًا';
+            var ampm = hours >= 12 ? 'PM' : 'AM';
 
             // Convert hours to 12-hour format
             hours = hours % 12;
